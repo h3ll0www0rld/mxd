@@ -1,11 +1,7 @@
 allprojects {
     repositories {
-        // google()
-        // mavenCentral()
-        maven{ url 'https://maven.aliyun.com/repository/google'} //修改
-        maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'} //修改
-        maven{ url 'https://maven.aliyun.com/repository/public'} //修改
-        maven{ url 'https://maven.aliyun.com/repository/jcenter'} //修改
+        google()
+        mavenCentral()
     }
 }
 
