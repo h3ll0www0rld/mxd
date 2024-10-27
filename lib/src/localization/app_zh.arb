@@ -1,0 +1,10 @@
+{
+  "@@locale": "zh",
+  "appTitle": "mxd",
+  "settingsTitle": "设置",
+  "language": "语言",
+  "theme": "主题",
+  "systemTheme": "系统主题",
+  "lightTheme": "明亮主题",
+  "darkTheme": "黑暗主题"
+}
