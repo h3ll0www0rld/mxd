@@ -69,11 +69,10 @@ class ReplyCard extends StatelessWidget {
                   if (refId != null) {
                     return GestureDetector(
                       onTap: () {
-                        // 确保 refId 非空后再调用 _showRefDialog
                         _showRefDialog(context, refId);
                       },
                       child: Text(
-                        ">>No.$refId", // 显示提取后的数字
+                        ">>No.$refId",
                         style:
                             TextStyle(fontSize: 18, color: Color(0xFF789922)),
                       ),
@@ -87,8 +86,10 @@ class ReplyCard extends StatelessWidget {
             if (replyCardModel.img.isNotEmpty)
               GestureDetector(
                   onTap: () {
-                    _showImage(context,
-                        "https://image.nmb.best/image/${replyCardModel.img}${replyCardModel.ext}");
+                    Navigator.pushNamed(
+                      context,
+                      "/image?img=${replyCardModel.img}&ext=${replyCardModel.ext}",
+                    );
                   },
                   child: Image.network(
                     "https://image.nmb.best/image/${replyCardModel.img}${replyCardModel.ext}",
@@ -131,20 +132,6 @@ class ReplyCard extends StatelessWidget {
               return Center(child: Text('No data available'));
             }
           },
-        );
-      },
-    );
-  }
-
-  void _showImage(BuildContext context, String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 600, maxHeight: 600),
-            child: Image.network(imageUrl, fit: BoxFit.cover),
-          ),
         );
       },
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:mxd/src/api/nmbxd.dart';
 import 'package:mxd/src/widgets/ref_model.dart';
+import 'package:mxd/src/widgets/thread_card_model.dart';
 
 class RefDialog extends StatelessWidget {
   final RefModel refModel;
@@ -78,12 +79,14 @@ class RefDialog extends StatelessWidget {
                 }
 
                 if (snapshot.hasData) {
+                  final threadData = ThreadCardModel.fromJson(snapshot.data!);
+
                   return Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(
-                            context, '/thread?id=${refModel.id}');
+                        Navigator.pushNamed(context,
+                            '/thread?id=${refModel.id}&fid=${threadData.fid}');
                       },
                       child: Text("跳转到该串"),
                     ),

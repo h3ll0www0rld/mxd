@@ -18,7 +18,8 @@ class ThreadCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/thread?id=${threadCardModel.id}');
+        Navigator.pushNamed(context,
+            '/thread?id=${threadCardModel.id}&fid=${threadCardModel.fid}');
       },
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8.0),

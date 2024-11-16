@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 import 'package:mxd/src/api/nmbxd.dart';
@@ -8,8 +10,9 @@ import 'package:provider/provider.dart';
 
 class ThreadView extends StatefulWidget {
   final int threadID;
+  final int forumID;
 
-  const ThreadView({super.key, required this.threadID});
+  const ThreadView({super.key, required this.threadID, required this.forumID});
 
   static const routeName = '/thread';
 
@@ -20,7 +23,7 @@ class ThreadView extends StatefulWidget {
 class _ThreadViewState extends State<ThreadView> {
   final ScrollController _scrollController = ScrollController();
 
-  List<ReplyCardModel> _replies = [];
+  final List<ReplyCardModel> _replies = [];
   ReplyCardModel? _mainReply;
   int _currentPage = 1;
   bool _isLoading = false;
@@ -58,11 +61,7 @@ class _ThreadViewState extends State<ThreadView> {
         _mainReply = ReplyCardModel.fromJson(data);
         po_hash = _mainReply!.user_hash;
 
-        setState(() {
-          print(_mainReply!.id);
-          forumName = Provider.of<ForumProvider>(context, listen: false)
-              .findForumNameByFId(_mainReply!.id); // 假设你有 forumId 字段
-        });
+        setState(() {});
       }
 
       final replies = (data['Replies'] as List)
@@ -108,6 +107,9 @@ class _ThreadViewState extends State<ThreadView> {
     final itemCount =
         _replies.length + (_mainReply != null ? 1 : 0) + (_isLoading ? 1 : 0);
 
+    forumName = Provider.of<ForumProvider>(context, listen: false)
+        .findForumNameByFId(widget.forumID);
+
     return Scaffold(
       appBar: AppBar(
         title: _mainReply == null
@@ -137,7 +139,6 @@ class _ThreadViewState extends State<ThreadView> {
                 return SizedBox();
               }
             } catch (e) {
-              print("Error in ListView: $e");
               return SizedBox();
             }
           },

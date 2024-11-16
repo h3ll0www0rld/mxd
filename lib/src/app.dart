@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mxd/src/image/image_view.dart';
 import 'package:mxd/src/provider/forum_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -55,13 +56,27 @@ class MyApp extends StatelessWidget {
                   );
                 case ThreadView.routeName:
                   final id = uri.queryParameters['id'];
-                  if (id != null) {
+                  final fid = uri.queryParameters['fid'];
+                  if (id != null && fid != null) {
                     return MaterialPageRoute<void>(
                       settings: routeSettings,
                       builder: (BuildContext context) {
                         return ThreadView(
                           threadID: int.parse(id),
+                          forumID: int.parse(fid),
                         );
+                      },
+                    );
+                  }
+                  break;
+                case '/image':
+                  final img = uri.queryParameters['img'];
+                  final ext = uri.queryParameters['ext'];
+                  if (img != null && ext != null) {
+                    return MaterialPageRoute<void>(
+                      settings: routeSettings,
+                      builder: (BuildContext context) {
+                        return ImageView(imageName: img, imageExt: ext);
                       },
                     );
                   }

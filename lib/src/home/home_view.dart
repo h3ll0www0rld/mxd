@@ -29,8 +29,9 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    _fetchData();
-    _fetchThreads();
+    _fetchData().then((_) {
+      _fetchThreads();
+    });
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
