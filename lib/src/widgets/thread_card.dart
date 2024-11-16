@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:mxd/src/home/home_view.dart';
+import 'package:mxd/src/provider/forum_provider.dart';
 import 'package:mxd/src/widgets/thread_card_model.dart';
+import 'package:provider/provider.dart';
 
 class ThreadCard extends StatelessWidget {
   final ThreadCardModel threadCardModel;
 
-  final HomeViewState homeViewState;
-
-  const ThreadCard(
-      {Key? key, required this.threadCardModel, required this.homeViewState})
-      : super(key: key);
+  const ThreadCard({Key? key, required this.threadCardModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String forumName = homeViewState.findForumNameByFId(threadCardModel.fid);
+    final forumProvider = Provider.of<ForumProvider>(context);
+    final forumName = forumProvider.findForumNameByFId(threadCardModel.fid);
     final isAdmin = threadCardModel.admin == 1;
     final isSage = threadCardModel.sage == 1;
 
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(
-            context, '/thread?id=${threadCardModel.id}&fn=${forumName}');
+        Navigator.pushNamed(context, '/thread?id=${threadCardModel.id}');
       },
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -37,6 +34,8 @@ class ThreadCard extends StatelessWidget {
                       style: isAdmin
                           ? TextStyle(color: Colors.red)
                           : TextStyle(color: Colors.grey[600])),
+                  Text(forumName.toString(),
+                      style: TextStyle(color: Colors.grey[600])),
                   Text(threadCardModel.now,
                       style: TextStyle(color: Colors.grey[600])),
                   Text(
@@ -48,6 +47,16 @@ class ThreadCard extends StatelessWidget {
               SizedBox(height: 8),
               if (isSage) ...[
                 Text("SAGE", style: TextStyle(color: Colors.red)),
+                SizedBox(height: 8),
+              ],
+              if (threadCardModel.title != "无标题") ...[
+                Text(threadCardModel.title,
+                    style: TextStyle(color: Colors.grey[600])),
+                SizedBox(height: 8),
+              ],
+              if (threadCardModel.name != "无名氏") ...[
+                Text(threadCardModel.name,
+                    style: TextStyle(color: Colors.grey[600])),
                 SizedBox(height: 8),
               ],
               HtmlWidget(

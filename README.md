@@ -18,5 +18,5 @@ The Project is under development so there is no stable build right now.
 - [ ] Cookie Management
 - [ ] Feed
 - [ ] Only View PO
-- [ ] TimeLine
-- [ ] ref
+- [x] TimeLine
+- [x] ref

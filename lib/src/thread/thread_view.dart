@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:mxd/src/api/nmbxd.dart';
+import 'package:mxd/src/provider/forum_provider.dart';
 import 'package:mxd/src/widgets/reply_card.dart';
 import 'package:mxd/src/widgets/reply_card_model.dart';
+import 'package:provider/provider.dart';
 
 class ThreadView extends StatefulWidget {
   final int threadID;
-  final String forumName;
 
-  const ThreadView(
-      {super.key,
-      required this.threadID,
-      required this.forumName});
+  const ThreadView({super.key, required this.threadID});
 
   static const routeName = '/thread';
 
@@ -21,17 +19,20 @@ class ThreadView extends StatefulWidget {
 
 class _ThreadViewState extends State<ThreadView> {
   final ScrollController _scrollController = ScrollController();
+
   List<ReplyCardModel> _replies = [];
   ReplyCardModel? _mainReply;
   int _currentPage = 1;
   bool _isLoading = false;
   bool _hasMoreData = true;
+  String? forumName;
 
   String? po_hash;
 
   @override
   void initState() {
     super.initState();
+
     _fetchReplies();
 
     _scrollController.addListener(() {
@@ -56,6 +57,12 @@ class _ThreadViewState extends State<ThreadView> {
       if (_mainReply == null) {
         _mainReply = ReplyCardModel.fromJson(data);
         po_hash = _mainReply!.user_hash;
+
+        setState(() {
+          print(_mainReply!.id);
+          forumName = Provider.of<ForumProvider>(context, listen: false)
+              .findForumNameByFId(_mainReply!.id); // 假设你有 forumId 字段
+        });
       }
 
       final replies = (data['Replies'] as List)
@@ -63,21 +70,29 @@ class _ThreadViewState extends State<ThreadView> {
           .toList();
       if (!(replies.length == 1 && replies[0].id == 9999999)) {
         setState(() {
-          _replies.addAll(replies); // 仅在条件不满足时更新回复列表
-          _currentPage++; // 更新当前页
+          _replies.addAll(replies);
+          _currentPage++;
           if (replies.isEmpty) {
-            _hasMoreData = false; // 如果没有新数据，设置为false
+            _hasMoreData = false;
           }
         });
       }
     } catch (e) {
-      // 处理错误
-      print('Error fetching replies: $e');
+      _showErrorMessage(e.toString());
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   Future<void> _refreshReplies() async {
@@ -95,28 +110,31 @@ class _ThreadViewState extends State<ThreadView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("NO.${widget.threadID} ${widget.forumName}"),
+        title: _mainReply == null
+            ? CircularProgressIndicator()
+            : forumName == null
+                ? CircularProgressIndicator() // 如果 forumName 还未加载，显示加载指示器
+                : Text("NO.${widget.threadID} $forumName"),
       ),
       body: RefreshIndicator(
         onRefresh: _refreshReplies,
         child: ListView.builder(
           controller: _scrollController,
-          itemCount: itemCount, // 增加一个位置用于加载指示器
+          itemCount: itemCount,
           itemBuilder: (context, index) {
             try {
               if (index == 0 && _mainReply != null) {
                 return ReplyCard(
                   replyCardModel: _mainReply!,
                   po_hash: po_hash,
-                ); // 显示主回复
+                );
               } else if (index < _replies.length + 1) {
                 return ReplyCard(
-                    replyCardModel: _replies[index - 1],
-                    po_hash: po_hash); // 显示回复列表
+                    replyCardModel: _replies[index - 1], po_hash: po_hash);
               } else if (_isLoading) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                return SizedBox(); // 如果没有更多数据，返回空
+                return SizedBox();
               }
             } catch (e) {
               print("Error in ListView: $e");
