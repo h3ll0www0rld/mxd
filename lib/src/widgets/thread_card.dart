@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class ThreadCard extends StatelessWidget {
   final ThreadCardModel threadCardModel;
 
-  const ThreadCard({Key? key, required this.threadCardModel}) : super(key: key);
+  const ThreadCard({super.key, required this.threadCardModel});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class ThreadCard extends StatelessWidget {
     final isAdmin = threadCardModel.admin == 1;
     final isSage = threadCardModel.sage == 1;
 
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context,
             '/thread?id=${threadCardModel.id}&fid=${threadCardModel.fid}');
