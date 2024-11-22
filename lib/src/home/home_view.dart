@@ -20,7 +20,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final ScrollController _scrollController = ScrollController();
-  List<ThreadCardModel> _threads = [];
+  final List<ThreadCardModel> _threads = [];
   int _currentPage = 1;
   bool _isLoading = false;
   bool _hasMoreData = true;
@@ -210,7 +210,7 @@ class _HomeViewState extends State<HomeView> {
                       );
                     }).toList(),
                   );
-                }).toList(),
+                }),
               ],
             ),
           );

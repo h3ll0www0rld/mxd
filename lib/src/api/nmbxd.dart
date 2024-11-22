@@ -25,7 +25,7 @@ Future<List<Map<String, dynamic>>> fetchTimeLineList() async {
 
 Future<List<dynamic>> fetchForumByFID(int fid, int page) async {
   final response = await http
-      .get(Uri.parse('https://api.nmb.best/api/showf?id=${fid}&page=${page}'));
+      .get(Uri.parse('https://api.nmb.best/api/showf?id=$fid&page=$page'));
 
   if (response.statusCode == 200) {
     final responseData = json.decode(response.body);
@@ -34,42 +34,42 @@ Future<List<dynamic>> fetchForumByFID(int fid, int page) async {
     }
     return responseData;
   } else {
-    throw Exception('Failed to get /showf?id=${fid}&page=${page}');
+    throw Exception('Failed to get /showf?id=$fid&page=$page');
   }
 }
 
 Future<List<dynamic>> fetchTimeLineByID(int id, int page) async {
   final response = await http.get(
-      Uri.parse('https://api.nmb.best/api/timeline?id=${id}&page=${page}'));
+      Uri.parse('https://api.nmb.best/api/timeline?id=$id&page=$page'));
 
   if (response.statusCode == 200) {
     return json.decode(response.body);
   } else {
-    throw Exception('Failed to get /timeline?id=${id}&page=${page}');
+    throw Exception('Failed to get /timeline?id=$id&page=$page');
   }
 }
 
 Future<Map<String, dynamic>> fetchThreadRepliesByID(int id, int page) async {
   final response = await http
-      .get(Uri.parse('https://api.nmb.best/api/thread?id=${id}&page=${page}'));
+      .get(Uri.parse('https://api.nmb.best/api/thread?id=$id&page=$page'));
 
   if (response.statusCode == 200) {
     final responseData = json.decode(response.body);
     if (responseData is String && responseData == '该串不存在') {
-      throw Exception('该串不存在'); // 抛出自定义异常
+      throw Exception('该串不存在');
     }
     if (responseData['success'] == false) {
       throw Exception(responseData['error']);
     }
     return responseData;
   } else {
-    throw Exception('Failed to get /thread?id=${id}&page=${page}');
+    throw Exception('Failed to get /thread?id=$id&page=$page');
   }
 }
 
 Future<Map<String, dynamic>> fetchRefByID(int id) async {
   final response =
-      await http.get(Uri.parse('https://api.nmb.best/api/ref?id=${id}'));
+      await http.get(Uri.parse('https://api.nmb.best/api/ref?id=$id'));
 
   if (response.statusCode == 200) {
     final responseData = json.decode(response.body);
@@ -78,6 +78,6 @@ Future<Map<String, dynamic>> fetchRefByID(int id) async {
     }
     return responseData;
   } else {
-    throw Exception('Failed to get /ref?id=${id}');
+    throw Exception('Failed to get /ref?id=$id');
   }
 }
