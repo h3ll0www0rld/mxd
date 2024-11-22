@@ -16,6 +16,7 @@ class ImageView extends StatelessWidget {
         child: InteractiveViewer(
           minScale: 0.5,
           maxScale: 5.0,
+          clipBehavior: Clip.none,
           child: Image.network(
             "https://image.nmb.best/image/$imageName$imageExt",
             fit: BoxFit.contain,

@@ -115,7 +115,7 @@ class _ThreadViewState extends State<ThreadView> {
         title: _mainReply == null
             ? CircularProgressIndicator()
             : forumName == null
-                ? CircularProgressIndicator() // 如果 forumName 还未加载，显示加载指示器
+                ? CircularProgressIndicator()
                 : Text("NO.${widget.threadID} $forumName"),
       ),
       body: RefreshIndicator(

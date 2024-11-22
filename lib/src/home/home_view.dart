@@ -150,6 +150,15 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         title: Consumer<ForumProvider>(
           builder: (context, forumProvider, child) {
+            if (forumProvider.isLoading) {
+              return const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              );
+            }
             return Text(forumProvider.findForumNameByFId(_selectedForumID));
           },
         ),

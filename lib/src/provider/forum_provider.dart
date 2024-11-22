@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class ForumProvider with ChangeNotifier {
   List<dynamic> forums = [];
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
 
   void setForums(List<dynamic> forumData) {
     forums = forumData;
@@ -9,7 +11,7 @@ class ForumProvider with ChangeNotifier {
   }
 
   String findForumNameByFId(int fid) {
-    // print(forums);
+    _isLoading = false;
     for (var category in forums) {
       for (var forum in category['forums']) {
         if (int.parse(forum['id']) == fid) {
@@ -17,6 +19,6 @@ class ForumProvider with ChangeNotifier {
         }
       }
     }
-    return "Null";
+    return "Error";
   }
 }
