@@ -1,9 +1,11 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:mxd/src/api/nmbxd.dart';
-import 'package:mxd/src/widgets/ref_dialog.dart';
-import 'package:mxd/src/widgets/ref_model.dart';
-import 'package:mxd/src/widgets/reply_card_model.dart';
+import 'package:mxd/main.dart';
+import 'package:mxd/src/views/thread/widgets/ref_dialog.dart';
+import 'package:mxd/src/models/ref_dialog.dart';
+import 'package:mxd/src/models/reply_card.dart';
 
 class ReplyCard extends StatelessWidget {
   final ReplyCardModel replyCardModel;
@@ -21,7 +23,7 @@ class ReplyCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0), // 添加内边距
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -98,7 +100,7 @@ class ReplyCard extends StatelessWidget {
                       fit: BoxFit.cover,
                     )),
               const Divider(
-                thickness: 1.5,
+                thickness: 0.5,
                 indent: 2.0,
                 endIndent: 2.0,
               ),
@@ -126,7 +128,7 @@ class ReplyCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return FutureBuilder<Map<String, dynamic>>(
-          future: fetchRefByID(refID),
+          future: nmbxdClient.fetchRefByID(refID),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -136,7 +138,7 @@ class ReplyCard extends StatelessWidget {
               final refModel = RefModel.fromJson(snapshot.data!);
               return RefDialog(refModel: refModel);
             } else {
-              return Center(child: Text('No data available'));
+              return Center(child: Text('Unexpected error occurred.'));
             }
           },
         );

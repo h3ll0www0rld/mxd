@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:mxd/src/api/nmbxd.dart';
-import 'package:mxd/src/widgets/ref_model.dart';
-import 'package:mxd/src/widgets/thread_card_model.dart';
+import 'package:mxd/main.dart';
+import 'package:mxd/src/models/ref_dialog.dart';
+import 'package:mxd/src/models/thread_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RefDialog extends StatelessWidget {
   final RefModel refModel;
@@ -65,7 +66,7 @@ class RefDialog extends StatelessWidget {
                     fit: BoxFit.cover,
                   )),
             FutureBuilder<Map<String, dynamic>>(
-              future: fetchThreadRepliesByID(refModel.id, 1),
+              future: nmbxdClient.fetchThreadRepliesByID(refModel.id, 1),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -84,12 +85,12 @@ class RefDialog extends StatelessWidget {
                   return Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context,
-                            '/thread?id=${refModel.id}&fid=${threadData.fid}');
-                      },
-                      child: Text("跳转到该串"),
-                    ),
+                        onPressed: () {
+                          Navigator.pushNamed(context,
+                              '/thread?id=${refModel.id}&fid=${threadData.fid}');
+                        },
+                        child:
+                            Text(AppLocalizations.of(context)!.jumpToThread)),
                   );
                 }
 

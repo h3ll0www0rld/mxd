@@ -1,15 +1,17 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mxd/src/image/image_view.dart';
-import 'package:mxd/src/provider/forum_provider.dart';
+import 'package:mxd/src/views/settings/cookie/cookie_view.dart';
+import 'package:mxd/src/views/image/view.dart';
+import 'package:mxd/src/provider/forum_list_provider.dart';
+import 'package:mxd/src/views/settings/cookie/login/login_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mxd/src/home/home_view.dart';
-import 'package:mxd/src/thread/thread_view.dart';
+import 'package:mxd/src/views/home/view.dart';
+import 'package:mxd/src/views/thread/view.dart';
 
-import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
+import 'views/settings/controller.dart';
+import 'views/settings/view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.settingsController});
@@ -66,6 +68,18 @@ class MyApp extends StatelessWidget {
                             return SettingsView(controller: settingsController);
                           },
                         );
+                      case CookieView.routeName:
+                        return MaterialPageRoute<void>(
+                          settings: routeSettings,
+                          builder: (BuildContext context) {
+                            return CookieView();
+                          });
+                      case LoginView.routeName:
+                        return MaterialPageRoute<void>(
+                          settings: routeSettings,
+                          builder: (BuildContext context) {
+                            return LoginView();
+                          });
                       case ThreadView.routeName:
                         final id = uri.queryParameters['id'];
                         final fid = uri.queryParameters['fid'];
@@ -81,7 +95,7 @@ class MyApp extends StatelessWidget {
                           );
                         }
                         break;
-                      case '/image':
+                      case ImageView.routeName:
                         final img = uri.queryParameters['img'];
                         final ext = uri.queryParameters['ext'];
                         if (img != null && ext != null) {

@@ -6,5 +6,10 @@
   "theme": "主题",
   "systemTheme": "系统主题",
   "lightTheme": "明亮主题",
-  "darkTheme": "黑暗主题"
+  "darkTheme": "黑暗主题",
+  "viewImage": "查看图片",
+  "imageLoadError": "图片加载失败",
+  "jumpToThread": "跳转到该串",
+  "loading": "加载中...",
+  "retry": "重试"
 }

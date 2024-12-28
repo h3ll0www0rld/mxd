@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:mxd/src/provider/forum_provider.dart';
-import 'package:mxd/src/widgets/thread_card_model.dart';
+import 'package:mxd/src/provider/forum_list_provider.dart';
+import 'package:mxd/src/models/thread_card.dart';
 import 'package:provider/provider.dart';
 
 class ThreadCard extends StatelessWidget {
@@ -22,6 +22,7 @@ class ThreadCard extends StatelessWidget {
             '/thread?id=${threadCardModel.id}&fid=${threadCardModel.fid}');
       },
       child: Card(
+        color: Theme.of(context).splashColor,
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
