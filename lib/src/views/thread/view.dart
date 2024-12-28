@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:mxd/src/provider/forum_list_provider.dart';
+import 'package:mxd/src/provider/forum_list.dart';
 import 'package:mxd/src/views/thread/service.dart';
 import 'package:mxd/src/views/thread/widgets/reply_card.dart';
 import 'package:mxd/src/models/reply_card.dart';

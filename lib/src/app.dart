@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mxd/src/views/settings/cookie/cookie_view.dart';
 import 'package:mxd/src/views/image/view.dart';
-import 'package:mxd/src/provider/forum_list_provider.dart';
+import 'package:mxd/src/provider/forum_list.dart';
 import 'package:mxd/src/views/settings/cookie/login/login_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:mxd/src/provider/forum_list_provider.dart';
+import 'package:mxd/src/provider/forum_list.dart';
 import 'package:mxd/src/models/thread_card.dart';
 import 'package:provider/provider.dart';
 

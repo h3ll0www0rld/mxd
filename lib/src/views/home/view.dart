@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mxd/src/provider/forum_list_provider.dart';
+import 'package:mxd/src/provider/forum_list.dart';
 import 'package:mxd/src/views/home/service.dart';
 import 'package:mxd/src/views/home/widgets/thread_card.dart';
 import 'package:mxd/src/models/thread_card.dart';
