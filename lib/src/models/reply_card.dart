@@ -27,7 +27,7 @@ class ReplyCardModel {
       admin: json['admin'],
       title: json['title'],
       now: json['now'],
-      content: json['content'], // 替换 <br/> 为换行符
+      content: json['content'],
       img: json['img'],
       ext: json['ext'],
       name: json['name'],

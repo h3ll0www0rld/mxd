@@ -1,5 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mxd/src/views/settings/cookie/controller.dart';
 import 'dart:convert';
+
+import 'package:provider/provider.dart';
 
 class NmbxdClient {
   final String baseUrl;
@@ -18,19 +22,28 @@ class NmbxdClient {
     Map<String, String>? headers,
     Map<String, dynamic>? body,
     int retries = 0,
+    required BuildContext context,
   }) async {
     try {
       final uri = Uri.parse('$baseUrl$endpoint');
       http.Response response;
 
+      final enabledCookie =
+          Provider.of<CookiesController>(context, listen: false).enabledCookie;
+      final requestHeaders = {
+        ...?headers,
+        if (enabledCookie?.user_hash != null)
+          'Cookie': 'userhash=${enabledCookie?.user_hash}',
+      };
+
       switch (method) {
         case 'GET':
-          response = await http.get(uri, headers: headers);
+          response = await http.get(uri, headers: requestHeaders);
           break;
         case 'POST':
           response = await http.post(
             uri,
-            headers: headers,
+            headers: requestHeaders,
             body: jsonEncode(body),
           );
           break;
@@ -52,6 +65,7 @@ class NmbxdClient {
           headers: headers,
           body: body,
           retries: retries + 1,
+          context: context,
         );
       } else {
         throw Exception('Request failed after $maxRetries retries: $e');
@@ -59,25 +73,43 @@ class NmbxdClient {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchForumList() async {
-    final response = await _makeRequest('/api/getForumList', method: 'GET');
+  Future<List<Map<String, dynamic>>> fetchForumList(
+      BuildContext context) async {
+    final response = await _makeRequest(
+      '/api/getForumList',
+      method: 'GET',
+      context: context,
+    );
     return List<Map<String, dynamic>>.from(json.decode(response.body));
   }
 
-  Future<List<Map<String, dynamic>>> fetchTimeLineList() async {
-    final response = await _makeRequest('/api/getTimelineList', method: 'GET');
+  Future<List<Map<String, dynamic>>> fetchTimeLineList(
+      BuildContext context) async {
+    final response = await _makeRequest(
+      '/api/getTimelineList',
+      method: 'GET',
+      context: context,
+    );
     return List<Map<String, dynamic>>.from(json.decode(response.body));
   }
 
-  Future<List<dynamic>> fetchTimeLineByID(int id, int page) async {
-    final response =
-        await _makeRequest('/api/timeline?id=$id&page=$page', method: 'GET');
+  Future<List<dynamic>> fetchTimeLineByID(
+      int id, int page, BuildContext context) async {
+    final response = await _makeRequest(
+      '/api/timeline?id=$id&page=$page',
+      method: 'GET',
+      context: context,
+    );
     return json.decode(response.body);
   }
 
-  Future<List<dynamic>> fetchForumByFID(int fid, int page) async {
-    final response =
-        await _makeRequest('/api/showf?id=$fid&page=$page', method: 'GET');
+  Future<List<dynamic>> fetchForumByFID(
+      int fid, int page, BuildContext context) async {
+    final response = await _makeRequest(
+      '/api/showf?id=$fid&page=$page',
+      method: 'GET',
+      context: context,
+    );
     final responseData = json.decode(response.body);
 
     if (responseData is Map && responseData['success'] == false) {
@@ -86,9 +118,13 @@ class NmbxdClient {
     return responseData;
   }
 
-  Future<Map<String, dynamic>> fetchThreadRepliesByID(int id, int page) async {
-    final response =
-        await _makeRequest('/api/thread?id=$id&page=$page', method: 'GET');
+  Future<Map<String, dynamic>> fetchThreadRepliesByID(
+      int id, int page, BuildContext context) async {
+    final response = await _makeRequest(
+      '/api/thread?id=$id&page=$page',
+      method: 'GET',
+      context: context,
+    );
     final responseData = json.decode(response.body);
 
     if (responseData is String && responseData == '该串不存在') {
@@ -100,8 +136,13 @@ class NmbxdClient {
     return responseData;
   }
 
-  Future<Map<String, dynamic>> fetchRefByID(int id) async {
-    final response = await _makeRequest('/api/ref?id=$id', method: 'GET');
+  Future<Map<String, dynamic>> fetchRefByID(
+      int id, BuildContext context) async {
+    final response = await _makeRequest(
+      '/api/ref?id=$id',
+      method: 'GET',
+      context: context,
+    );
     final responseData = json.decode(response.body);
 
     if (responseData['success'] == false) {

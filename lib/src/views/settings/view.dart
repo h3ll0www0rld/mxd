@@ -53,9 +53,34 @@ class SettingsView extends StatelessWidget {
               ),
             ),
             const Divider(),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      AppLocalizations.of(context)!.fontSize,
+                    ),
+                  ),
+                  Expanded(
+                    child: Slider(
+                      value: controller.fontSize,
+                      min: 8.0,
+                      max: 30.0,
+                      divisions: 18,
+                      label: controller.fontSize.toStringAsFixed(1),
+                      onChanged: (value) {
+                        controller.updateFontSize(value);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
             InkWell(
               onTap: () {
-                // 跳转到新页面
                 Navigator.pushNamed(context, "/cookie");
               },
               child: Container(
@@ -64,7 +89,7 @@ class SettingsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "饼干管理", // 本地化文本
+                      AppLocalizations.of(context)!.cookieManager,
                     ),
                   ],
                 ),

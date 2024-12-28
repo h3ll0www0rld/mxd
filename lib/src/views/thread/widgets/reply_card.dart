@@ -34,10 +34,14 @@ class ReplyCard extends StatelessWidget {
                     replyCardModel.user_hash,
                     style: isAdmin
                         ? TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold)
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          )
                         : isPO
                             ? TextStyle(
-                                color: Colors.blue, fontWeight: FontWeight.bold)
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              )
                             : TextStyle(color: Colors.grey[600]),
                   ),
                   Text(
@@ -63,7 +67,6 @@ class ReplyCard extends StatelessWidget {
               SizedBox(height: 8),
               HtmlWidget(
                 replyCardModel.content,
-                textStyle: TextStyle(fontSize: 18),
                 customWidgetBuilder: (element) {
                   if (element.localName == 'font' &&
                       element.attributes['color'] == '#789922' &&
@@ -76,8 +79,7 @@ class ReplyCard extends StatelessWidget {
                         },
                         child: Text(
                           ">>No.$refId",
-                          style:
-                              TextStyle(fontSize: 18, color: Color(0xFF789922)),
+                          style: TextStyle(color: Color(0xFF789922)),
                         ),
                       );
                     }
@@ -99,11 +101,6 @@ class ReplyCard extends StatelessWidget {
                       height: 250,
                       fit: BoxFit.cover,
                     )),
-              const Divider(
-                thickness: 0.5,
-                indent: 2.0,
-                endIndent: 2.0,
-              ),
             ],
           ),
         ),
@@ -128,7 +125,7 @@ class ReplyCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return FutureBuilder<Map<String, dynamic>>(
-          future: nmbxdClient.fetchRefByID(refID),
+          future: nmbxdClient.fetchRefByID(refID, context),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());

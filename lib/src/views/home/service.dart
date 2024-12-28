@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:mxd/main.dart';
 import 'package:mxd/src/models/thread_card.dart';
 
 class HomeService {
-  Future<List> getForumList() async {
+  Future<List> getForumList(BuildContext context) async {
     try {
-      final forumFuture = nmbxdClient.fetchForumList();
-      final timelineFuture = nmbxdClient.fetchTimeLineList();
+      final forumFuture = nmbxdClient.fetchForumList(context);
+      final timelineFuture = nmbxdClient.fetchTimeLineList(context);
 
       final results = await Future.wait([forumFuture, timelineFuture]);
 
@@ -37,16 +38,16 @@ class HomeService {
   }
 
   Future<List<ThreadCardModel>> getThreads(
-      int selectedForumID, int currentPage) async {
+      int selectedForumID, int currentPage, BuildContext context) async {
     try {
       List rawData;
 
       if (selectedForumID >= 1 && selectedForumID <= 3) {
-        rawData =
-            await nmbxdClient.fetchTimeLineByID(selectedForumID, currentPage);
+        rawData = await nmbxdClient.fetchTimeLineByID(
+            selectedForumID, currentPage, context);
       } else {
-        rawData =
-            await nmbxdClient.fetchForumByFID(selectedForumID, currentPage);
+        rawData = await nmbxdClient.fetchForumByFID(
+            selectedForumID, currentPage, context);
       }
 
       return rawData

@@ -57,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
     });
 
     try {
-      final forumData = await _homeService.getForumList();
+      final forumData = await _homeService.getForumList(context);
 
       Provider.of<ForumProvider>(context, listen: false).setForums(forumData);
     } catch (e) {
@@ -83,8 +83,8 @@ class _HomeViewState extends State<HomeView> {
     });
 
     try {
-      final data =
-          await _homeService.getThreads(_selectedForumID, _currentPage);
+      final data = await _homeService.getThreads(
+          _selectedForumID, _currentPage, context);
 
       setState(() {
         _threads.addAll(data);
@@ -148,6 +148,7 @@ class _HomeViewState extends State<HomeView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Icon(Icons.error, color: Colors.red, size: 50),
                     Text(
                       _errorMessage ?? 'An error occurred.',
                       textAlign: TextAlign.center,
@@ -188,7 +189,7 @@ class _HomeViewState extends State<HomeView> {
                       BoxDecoration(color: Theme.of(context).primaryColor),
                   child: Text(
                     AppLocalizations.of(context)!.appTitle,
-                    style: TextStyle(color: Colors.white, fontSize: 24),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 ...forumProvider.forums.map((forum) {

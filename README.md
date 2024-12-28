@@ -15,7 +15,7 @@ The Project is under development so there is no stable build right now.
 - [x] View Thread
 - [x] View Pictures
 - [ ] Reply
-- [ ] Cookie Management
+- [x] Cookie Management
 - [ ] Feed
 - [ ] Only View PO
 - [x] TimeLine

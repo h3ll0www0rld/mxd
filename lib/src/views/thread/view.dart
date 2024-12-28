@@ -63,7 +63,7 @@ class _ThreadViewState extends State<ThreadView> {
 
     try {
       final data = await _threadService.getThreadReplies(
-          id: widget.threadID, page: _currentPage);
+          id: widget.threadID, page: _currentPage, context: context);
       final replies = _threadService.parseReplies(data);
 
       setState(() {
@@ -133,6 +133,7 @@ class _ThreadViewState extends State<ThreadView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Icon(Icons.error, color: Colors.red, size: 50),
                   Text(
                     _errorMessage ?? 'An error occurred.',
                     textAlign: TextAlign.center,
@@ -154,12 +155,19 @@ class _ThreadViewState extends State<ThreadView> {
                     (_isLoading ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == 0 && _mainReply != null) {
-                    return ReplyCard(
-                      replyCardModel: _mainReply!,
-                      po_hash: po_hash,
+                    return Column(
+                      children: [
+                        ReplyCard(
+                          replyCardModel: _mainReply!,
+                          po_hash: po_hash,
+                        ),
+                        if (_replies.isNotEmpty)
+                          const Divider(
+                            thickness: 0.5,
+                          ),
+                      ],
                     );
                   }
-
                   final replyIndex = index - (_mainReply != null ? 1 : 0);
                   if (replyIndex >= 0 && replyIndex < _replies.length) {
                     return ReplyCard(

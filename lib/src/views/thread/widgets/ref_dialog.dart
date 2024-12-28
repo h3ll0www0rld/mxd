@@ -30,10 +30,6 @@ class RefDialog extends StatelessWidget {
                         ? TextStyle(color: Colors.red)
                         : TextStyle(color: Colors.grey[600])),
                 Text(refModel.now, style: TextStyle(color: Colors.grey[600])),
-                Text(
-                  "NO.${refModel.id}",
-                  style: TextStyle(color: Colors.grey[600]),
-                )
               ],
             ),
             SizedBox(height: 8),
@@ -49,9 +45,15 @@ class RefDialog extends StatelessWidget {
               Text(refModel.name, style: TextStyle(color: Colors.grey[600])),
               SizedBox(height: 8),
             ],
-            HtmlWidget(
-              refModel.content,
-              textStyle: TextStyle(fontSize: 18),
+            ClipRect(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: 60.0,
+                ),
+                child: HtmlWidget(
+                  refModel.content,
+                ),
+              ),
             ),
             SizedBox(height: 8),
             if (refModel.img.isNotEmpty)
@@ -66,7 +68,8 @@ class RefDialog extends StatelessWidget {
                     fit: BoxFit.cover,
                   )),
             FutureBuilder<Map<String, dynamic>>(
-              future: nmbxdClient.fetchThreadRepliesByID(refModel.id, 1),
+              future:
+                  nmbxdClient.fetchThreadRepliesByID(refModel.id, 1, context),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());

@@ -61,9 +61,15 @@ class ThreadCard extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[600])),
                 SizedBox(height: 8),
               ],
-              HtmlWidget(
-                threadCardModel.content,
-                textStyle: TextStyle(fontSize: 18),
+              ClipRect(
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 100.0,
+                  ),
+                  child: HtmlWidget(
+                    threadCardModel.content,
+                  ),
+                ),
               ),
               SizedBox(height: 8),
               if (threadCardModel.img.isNotEmpty)

@@ -1,15 +1,13 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mxd/src/views/settings/cookie/cookie_view.dart';
+import 'package:mxd/src/views/settings/cookie/view.dart';
 import 'package:mxd/src/views/image/view.dart';
 import 'package:mxd/src/provider/forum_list.dart';
-import 'package:mxd/src/views/settings/cookie/login/login_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mxd/src/views/home/view.dart';
 import 'package:mxd/src/views/thread/view.dart';
-
 import 'views/settings/controller.dart';
 import 'views/settings/view.dart';
 
@@ -51,10 +49,30 @@ class MyApp extends StatelessWidget {
                   theme: ThemeData(
                     colorScheme: lightColorScheme,
                     useMaterial3: true,
+                    textTheme: TextTheme(
+                      bodyLarge: TextStyle(
+                          fontSize: settingsController.fontSize + 2.0),
+                      bodyMedium:
+                          TextStyle(fontSize: settingsController.fontSize),
+                      bodySmall: TextStyle(
+                          fontSize: settingsController.fontSize - 2.0),
+                      titleLarge: TextStyle(
+                          fontSize: settingsController.fontSize + 4.0),
+                    ),
                   ),
                   darkTheme: ThemeData(
                     colorScheme: darkColorScheme,
                     useMaterial3: true,
+                    textTheme: TextTheme(
+                      bodyLarge: TextStyle(
+                          fontSize: settingsController.fontSize + 2.0),
+                      bodyMedium:
+                          TextStyle(fontSize: settingsController.fontSize),
+                      bodySmall: TextStyle(
+                          fontSize: settingsController.fontSize - 2.0),
+                      titleLarge: TextStyle(
+                          fontSize: settingsController.fontSize + 4.0),
+                    ),
                   ),
                   themeMode: settingsController.themeMode,
                   onGenerateRoute: (RouteSettings routeSettings) {
@@ -70,16 +88,10 @@ class MyApp extends StatelessWidget {
                         );
                       case CookieView.routeName:
                         return MaterialPageRoute<void>(
-                          settings: routeSettings,
-                          builder: (BuildContext context) {
-                            return CookieView();
-                          });
-                      case LoginView.routeName:
-                        return MaterialPageRoute<void>(
-                          settings: routeSettings,
-                          builder: (BuildContext context) {
-                            return LoginView();
-                          });
+                            settings: routeSettings,
+                            builder: (BuildContext context) {
+                              return CookieView();
+                            });
                       case ThreadView.routeName:
                         final id = uri.queryParameters['id'];
                         final fid = uri.queryParameters['fid'];

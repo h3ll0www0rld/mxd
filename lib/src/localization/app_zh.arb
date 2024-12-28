@@ -11,5 +11,8 @@
   "imageLoadError": "图片加载失败",
   "jumpToThread": "跳转到该串",
   "loading": "加载中...",
-  "retry": "重试"
+  "retry": "重试",
+  "fontSize": "字体大小",
+  "cookieManager": "Cookie 管理",
+  "pasteCookieUrl": "将Cookie二维码URL粘贴到这里"
 }

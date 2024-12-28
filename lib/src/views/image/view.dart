@@ -20,23 +20,27 @@ class ImageView extends StatelessWidget {
           minScale: 0.5,
           maxScale: 5.0,
           clipBehavior: Clip.none,
-          child: Image.network(
-            "https://image.nmb.best/image/$imageName$imageExt",
-            fit: BoxFit.contain,
-            errorBuilder:
-                (BuildContext context, Object error, StackTrace? stackTrace) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error, color: Colors.red, size: 50),
-                  const SizedBox(height: 10),
-                  Text(
-                    AppLocalizations.of(context)!.imageLoadError,
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
-                  ),
-                ],
-              );
-            },
+          child: Container(
+            color: Colors.black, // 设置背景颜色以区分图片区域
+            alignment: Alignment.center,
+            child: Image.network(
+              "https://image.nmb.best/image/$imageName$imageExt",
+              fit: BoxFit.contain,
+              errorBuilder:
+                  (BuildContext context, Object error, StackTrace? stackTrace) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error, color: Colors.red, size: 50),
+                    const SizedBox(height: 10),
+                    Text(
+                      AppLocalizations.of(context)!.imageLoadError,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
