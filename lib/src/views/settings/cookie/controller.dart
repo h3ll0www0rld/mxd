@@ -28,9 +28,10 @@ class CookiesController with ChangeNotifier {
   void setEnabledCookie(CookieCardModel cookie) {
     if (_enabledCookie != cookie) {
       _enabledCookie?.isEnabled = false;
-
       cookie.isEnabled = true;
       _enabledCookie = cookie;
+      updateCookies();
+
       notifyListeners();
     }
   }

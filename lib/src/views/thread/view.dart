@@ -111,6 +111,7 @@ class _ThreadViewState extends State<ThreadView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Consumer<ForumProvider>(
           builder: (context, forumProvider, child) {

@@ -12,6 +12,7 @@ class ImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.viewImage),
       ),
@@ -21,7 +22,6 @@ class ImageView extends StatelessWidget {
           maxScale: 5.0,
           clipBehavior: Clip.none,
           child: Container(
-            color: Colors.black, // 设置背景颜色以区分图片区域
             alignment: Alignment.center,
             child: Image.network(
               "https://image.nmb.best/image/$imageName$imageExt",
@@ -35,7 +35,10 @@ class ImageView extends StatelessWidget {
                     const SizedBox(height: 10),
                     Text(
                       AppLocalizations.of(context)!.imageLoadError,
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize:
+                              Theme.of(context).textTheme.bodyLarge!.fontSize),
                     ),
                   ],
                 );

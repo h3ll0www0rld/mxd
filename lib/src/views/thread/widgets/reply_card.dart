@@ -36,32 +36,48 @@ class ReplyCard extends StatelessWidget {
                         ? TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                          )
+                            fontSize:
+                                Theme.of(context).textTheme.bodySmall!.fontSize)
                         : isPO
                             ? TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold,
-                              )
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .fontSize)
                             : TextStyle(color: Colors.grey[600]),
                   ),
                   Text(
                     replyCardModel.now,
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize:
+                            Theme.of(context).textTheme.bodySmall!.fontSize),
                   ),
                   Text(
                     "NO.${replyCardModel.id}",
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize:
+                            Theme.of(context).textTheme.bodySmall!.fontSize),
                   )
                 ],
               ),
               if (replyCardModel.title != "无标题") ...[
                 Text(replyCardModel.title,
-                    style: TextStyle(color: Colors.grey[600])),
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium!.fontSize)),
                 SizedBox(height: 8),
               ],
               if (replyCardModel.name != "无名氏") ...[
                 Text(replyCardModel.name,
-                    style: TextStyle(color: Colors.grey[600])),
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium!.fontSize)),
                 SizedBox(height: 8),
               ],
               SizedBox(height: 8),
@@ -79,7 +95,12 @@ class ReplyCard extends StatelessWidget {
                         },
                         child: Text(
                           ">>No.$refId",
-                          style: TextStyle(color: Color(0xFF789922)),
+                          style: TextStyle(
+                              color: Color(0xFF789922),
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .fontSize),
                         ),
                       );
                     }

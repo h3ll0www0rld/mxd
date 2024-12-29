@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:mxd/main.dart';
+import 'package:mxd/src/core/widgets/sage_card.dart';
 import 'package:mxd/src/models/ref_dialog.dart';
 import 'package:mxd/src/models/thread_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -27,31 +28,54 @@ class RefDialog extends StatelessWidget {
               children: [
                 Text(refModel.user_hash,
                     style: isAdmin
-                        ? TextStyle(color: Colors.red)
-                        : TextStyle(color: Colors.grey[600])),
-                Text(refModel.now, style: TextStyle(color: Colors.grey[600])),
+                        ? TextStyle(
+                            color: Colors.red,
+                            fontSize:
+                                Theme.of(context).textTheme.bodySmall!.fontSize)
+                        : TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .fontSize)),
+                Text(refModel.now,
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize:
+                            Theme.of(context).textTheme.bodySmall!.fontSize)),
               ],
             ),
             SizedBox(height: 8),
             if (isSage) ...[
-              Text("SAGE", style: TextStyle(color: Colors.red)),
+              SageCard(),
               SizedBox(height: 8),
             ],
             if (refModel.title != "无标题") ...[
-              Text(refModel.title, style: TextStyle(color: Colors.grey[600])),
+              Text(refModel.title,
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize:
+                          Theme.of(context).textTheme.bodyMedium!.fontSize)),
               SizedBox(height: 8),
             ],
             if (refModel.name != "无名氏") ...[
-              Text(refModel.name, style: TextStyle(color: Colors.grey[600])),
+              Text(refModel.name,
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize:
+                          Theme.of(context).textTheme.bodyMedium!.fontSize)),
               SizedBox(height: 8),
             ],
             ClipRect(
               child: Container(
                 constraints: BoxConstraints(
-                  maxHeight: 60.0,
+                  maxHeight: 100.0,
                 ),
                 child: HtmlWidget(
                   refModel.content,
+                  textStyle: TextStyle(
+                    fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                  ),
                 ),
               ),
             ),

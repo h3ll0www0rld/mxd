@@ -16,6 +16,7 @@ class CookieView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.cookieManager),
       ),

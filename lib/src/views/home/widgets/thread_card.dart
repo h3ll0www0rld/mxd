@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:mxd/src/core/widgets/sage_card.dart';
 import 'package:mxd/src/provider/forum_list.dart';
 import 'package:mxd/src/models/thread_card.dart';
 import 'package:provider/provider.dart';
@@ -34,31 +35,56 @@ class ThreadCard extends StatelessWidget {
                 children: [
                   Text(threadCardModel.user_hash,
                       style: isAdmin
-                          ? TextStyle(color: Colors.red)
-                          : TextStyle(color: Colors.grey[600])),
+                          ? TextStyle(
+                              color: Colors.red,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .fontSize)
+                          : TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .fontSize)),
                   Text(forumName.toString(),
-                      style: TextStyle(color: Colors.grey[600])),
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize:
+                              Theme.of(context).textTheme.bodySmall!.fontSize)),
                   Text(threadCardModel.now,
-                      style: TextStyle(color: Colors.grey[600])),
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize:
+                              Theme.of(context).textTheme.bodySmall!.fontSize)),
                   Text(
                     (threadCardModel.ReplyCount).toString(),
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize:
+                            Theme.of(context).textTheme.bodySmall!.fontSize),
                   )
                 ],
               ),
               SizedBox(height: 8),
               if (isSage) ...[
-                Text("SAGE", style: TextStyle(color: Colors.red)),
+                SageCard(),
                 SizedBox(height: 8),
               ],
               if (threadCardModel.title != "无标题") ...[
                 Text(threadCardModel.title,
-                    style: TextStyle(color: Colors.grey[600])),
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium!.fontSize)),
                 SizedBox(height: 8),
               ],
               if (threadCardModel.name != "无名氏") ...[
                 Text(threadCardModel.name,
-                    style: TextStyle(color: Colors.grey[600])),
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium!.fontSize)),
                 SizedBox(height: 8),
               ],
               ClipRect(
@@ -68,6 +94,9 @@ class ThreadCard extends StatelessWidget {
                   ),
                   child: HtmlWidget(
                     threadCardModel.content,
+                    textStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium!.fontSize),
                   ),
                 ),
               ),

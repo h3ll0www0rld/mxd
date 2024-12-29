@@ -8,8 +8,8 @@ class SettingsController with ChangeNotifier {
     _loadSettings();
   }
 
-  late ThemeMode _themeMode;
-  late double _fontSize;
+  late ThemeMode _themeMode = ThemeMode.system;
+  late double _fontSize = 16.0;
   List<String> _cookies = [];
 
   ThemeMode get themeMode => _themeMode;

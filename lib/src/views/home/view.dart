@@ -123,6 +123,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Consumer<ForumProvider>(
           builder: (context, forumProvider, child) {
@@ -189,7 +190,10 @@ class _HomeViewState extends State<HomeView> {
                       BoxDecoration(color: Theme.of(context).primaryColor),
                   child: Text(
                     AppLocalizations.of(context)!.appTitle,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize:
+                            Theme.of(context).textTheme.bodyLarge!.fontSize),
                   ),
                 ),
                 ...forumProvider.forums.map((forum) {
@@ -197,7 +201,15 @@ class _HomeViewState extends State<HomeView> {
                     title: Text(forum['name']),
                     children: (forum['forums'] as List).map<Widget>((subForum) {
                       return ListTile(
-                        title: Text(subForum['name']),
+                        title: Text(
+                          subForum['name'],
+                          style: TextStyle(
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize,
+                          ),
+                        ),
                         onTap: () {
                           setState(() {
                             _selectedForumID = int.parse(subForum['id']);

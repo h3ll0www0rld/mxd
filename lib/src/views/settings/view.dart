@@ -18,6 +18,7 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Provider.of<SettingsController>(context);
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.settingsTitle),
       ),
@@ -68,7 +69,7 @@ class SettingsView extends StatelessWidget {
                       value: controller.fontSize,
                       min: 8.0,
                       max: 30.0,
-                      divisions: 18,
+                      divisions: 22,
                       label: controller.fontSize.toStringAsFixed(1),
                       onChanged: (value) {
                         controller.updateFontSize(value);

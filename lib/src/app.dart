@@ -51,13 +51,13 @@ class MyApp extends StatelessWidget {
                     useMaterial3: true,
                     textTheme: TextTheme(
                       bodyLarge: TextStyle(
-                          fontSize: settingsController.fontSize + 2.0),
+                          fontSize: settingsController.fontSize + 6.0),
                       bodyMedium:
                           TextStyle(fontSize: settingsController.fontSize),
                       bodySmall: TextStyle(
-                          fontSize: settingsController.fontSize - 2.0),
+                          fontSize: settingsController.fontSize - 6.0),
                       titleLarge: TextStyle(
-                          fontSize: settingsController.fontSize + 4.0),
+                          fontSize: settingsController.fontSize + 6.0),
                     ),
                   ),
                   darkTheme: ThemeData(
@@ -65,13 +65,13 @@ class MyApp extends StatelessWidget {
                     useMaterial3: true,
                     textTheme: TextTheme(
                       bodyLarge: TextStyle(
-                          fontSize: settingsController.fontSize + 2.0),
+                          fontSize: settingsController.fontSize + 6.0),
                       bodyMedium:
                           TextStyle(fontSize: settingsController.fontSize),
                       bodySmall: TextStyle(
-                          fontSize: settingsController.fontSize - 2.0),
+                          fontSize: settingsController.fontSize - 6.0),
                       titleLarge: TextStyle(
-                          fontSize: settingsController.fontSize + 4.0),
+                          fontSize: settingsController.fontSize + 6.0),
                     ),
                   ),
                   themeMode: settingsController.themeMode,
