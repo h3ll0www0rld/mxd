@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mxd/src/views/settings/cookie/controller.dart';
+import 'package:mxd/src/views/settings/controller.dart';
 
 import 'package:mxd/src/views/settings/cookie/widgets/cookie_card.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +47,7 @@ class CookieView extends StatelessWidget {
                         final decodedText =
                             utf8.decode(base64Decode(textParam));
 
-                        Provider.of<CookiesController>(context, listen: false)
+                        Provider.of<SettingsController>(context, listen: false)
                             .addCookie(decodedText);
                         _controller.clear();
                       }
@@ -58,7 +58,7 @@ class CookieView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Consumer<CookiesController>(
+            child: Consumer<SettingsController>(
               builder: (context, controller, child) {
                 return ListView.builder(
                   itemCount: controller.cookies.length,

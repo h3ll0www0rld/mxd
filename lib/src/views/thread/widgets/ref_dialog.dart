@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:mxd/main.dart';
-import 'package:mxd/src/core/widgets/sage_card.dart';
+import 'package:mxd/src/core/widgets/html_preview_widget.dart';
+import 'package:mxd/src/core/widgets/image_widget.dart';
+import 'package:mxd/src/core/widgets/sage_widget.dart';
+import 'package:mxd/src/core/widgets/text_widget.dart';
 import 'package:mxd/src/models/ref_dialog.dart';
 import 'package:mxd/src/models/thread_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,71 +28,37 @@ class RefDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(refModel.user_hash,
-                    style: isAdmin
-                        ? TextStyle(
-                            color: Colors.red,
-                            fontSize:
-                                Theme.of(context).textTheme.bodySmall!.fontSize)
-                        : TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
-                                .fontSize)),
-                Text(refModel.now,
-                    style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize:
-                            Theme.of(context).textTheme.bodySmall!.fontSize)),
+                if (isAdmin) ...[
+                  AdminText(),
+                ] else ...[
+                  InformationText(information: refModel.user_hash),
+                ],
+                InformationText(
+                  information: refModel.now,
+                ),
               ],
             ),
             SizedBox(height: 8),
             if (isSage) ...[
-              SageCard(),
+              SageWidget(),
               SizedBox(height: 8),
             ],
             if (refModel.title != "无标题") ...[
-              Text(refModel.title,
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize:
-                          Theme.of(context).textTheme.bodyMedium!.fontSize)),
+              TitleText(title: refModel.title),
               SizedBox(height: 8),
             ],
             if (refModel.name != "无名氏") ...[
-              Text(refModel.name,
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize:
-                          Theme.of(context).textTheme.bodyMedium!.fontSize)),
+              TitleText(title: refModel.name),
               SizedBox(height: 8),
             ],
-            ClipRect(
-              child: Container(
-                constraints: BoxConstraints(
-                  maxHeight: 100.0,
-                ),
-                child: HtmlWidget(
-                  refModel.content,
-                  textStyle: TextStyle(
-                    fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                  ),
-                ),
-              ),
-            ),
+            HtmlPreviewWidget(content: refModel.content),
             SizedBox(height: 8),
-            if (refModel.img.isNotEmpty)
-              GestureDetector(
-                  onTap: () {
-                    _showImage(context,
-                        "https://image.nmb.best/image/${refModel.img}${refModel.ext}");
-                  },
-                  child: Image.network(
-                    "https://image.nmb.best/image/${refModel.img}${refModel.ext}",
-                    height: 250,
-                    fit: BoxFit.cover,
-                  )),
+            if (refModel.img.isNotEmpty && refModel.ext.isNotEmpty) ...[
+              ImageWidget(
+                img: refModel.img,
+                ext: refModel.ext,
+              ),
+            ],
             FutureBuilder<Map<String, dynamic>>(
               future:
                   nmbxdClient.fetchThreadRepliesByID(refModel.id, 1, context),
@@ -127,20 +95,6 @@ class RefDialog extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void _showImage(BuildContext context, String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 600, maxHeight: 600),
-            child: Image.network(imageUrl, fit: BoxFit.cover),
-          ),
-        );
-      },
     );
   }
 }

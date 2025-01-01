@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:mxd/src/core/widgets/sage_card.dart';
+import 'package:mxd/src/core/widgets/html_preview_widget.dart';
+import 'package:mxd/src/core/widgets/image_widget.dart';
+import 'package:mxd/src/core/widgets/sage_widget.dart';
+import 'package:mxd/src/core/widgets/text_widget.dart';
 import 'package:mxd/src/provider/forum_list.dart';
 import 'package:mxd/src/models/thread_card.dart';
 import 'package:provider/provider.dart';
@@ -33,80 +35,36 @@ class ThreadCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(threadCardModel.user_hash,
-                      style: isAdmin
-                          ? TextStyle(
-                              color: Colors.red,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .fontSize)
-                          : TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .fontSize)),
-                  Text(forumName.toString(),
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize:
-                              Theme.of(context).textTheme.bodySmall!.fontSize)),
-                  Text(threadCardModel.now,
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize:
-                              Theme.of(context).textTheme.bodySmall!.fontSize)),
-                  Text(
-                    (threadCardModel.ReplyCount).toString(),
-                    style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize:
-                            Theme.of(context).textTheme.bodySmall!.fontSize),
-                  )
+                  if (isAdmin) ...[
+                    AdminText(),
+                  ] else ...[
+                    InformationText(information: threadCardModel.user_hash),
+                  ],
+                  InformationText(information: forumName.toString()),
+                  InformationText(information: threadCardModel.now),
+                  InformationText(
+                      information: threadCardModel.ReplyCount.toString()),
                 ],
               ),
               SizedBox(height: 8),
               if (isSage) ...[
-                SageCard(),
+                SageWidget(),
                 SizedBox(height: 8),
               ],
               if (threadCardModel.title != "无标题") ...[
-                Text(threadCardModel.title,
-                    style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize:
-                            Theme.of(context).textTheme.bodyMedium!.fontSize)),
+                TitleText(title: threadCardModel.title),
                 SizedBox(height: 8),
               ],
               if (threadCardModel.name != "无名氏") ...[
-                Text(threadCardModel.name,
-                    style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize:
-                            Theme.of(context).textTheme.bodyMedium!.fontSize)),
+                TitleText(title: threadCardModel.name),
                 SizedBox(height: 8),
               ],
-              ClipRect(
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxHeight: 100.0,
-                  ),
-                  child: HtmlWidget(
-                    threadCardModel.content,
-                    textStyle: TextStyle(
-                        fontSize:
-                            Theme.of(context).textTheme.bodyMedium!.fontSize),
-                  ),
-                ),
-              ),
+              HtmlPreviewWidget(content: threadCardModel.content),
               SizedBox(height: 8),
-              if (threadCardModel.img.isNotEmpty)
-                Image.network(
-                  "https://image.nmb.best/image/${threadCardModel.img}${threadCardModel.ext}",
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
+              if (threadCardModel.img.isNotEmpty &&
+                  threadCardModel.ext.isNotEmpty) ...[
+                ImageWidget(img: threadCardModel.img, ext: threadCardModel.ext),
+              ]
             ],
           ),
         ),

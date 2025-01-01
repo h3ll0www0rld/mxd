@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mxd/src/views/settings/cookie/controller.dart';
+import 'package:mxd/src/views/settings/controller.dart';
 import 'dart:convert';
 
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class NmbxdClient {
       http.Response response;
 
       final enabledCookie =
-          Provider.of<CookiesController>(context, listen: false).enabledCookie;
+          Provider.of<SettingsController>(context, listen: false).enabledCookie;
       final requestHeaders = {
         ...?headers,
         if (enabledCookie?.user_hash != null)

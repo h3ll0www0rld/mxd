@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mxd/src/core/services/nmbxd_client.dart';
-import 'package:mxd/src/views/settings/cookie/controller.dart';
 import 'package:provider/provider.dart';
 
 import 'src/app.dart';
@@ -15,11 +14,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (_) => settingsController),
-        ChangeNotifierProvider(
-            create: (_) =>
-                CookiesController(settingsController)),
+        ChangeNotifierProvider(create: (_) => settingsController),
       ],
       child: MyApp(settingsController: settingsController),
     ),
