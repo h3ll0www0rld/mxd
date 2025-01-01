@@ -20,7 +20,7 @@ jobs:
           flutter-version: '3.x'
       - run: flutter pub get
       - run: flutter test
-      - run: flutter build apk --release --target-platform android-arm,android-arm64,android-x64
+      - run: flutter build apk --release --target-platform android-arm,android-arm64,android-x64 --obfuscate --split-debug-info=debugInfo --split-per-abi
       - uses: actions/upload-artifact@v4
         with:
           name: build
