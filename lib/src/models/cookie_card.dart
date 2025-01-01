@@ -18,12 +18,20 @@ class CookieCardModel {
       isEnabled: json['isEnabled'] ?? false,
     );
   }
-  
+
   Map<String, dynamic> toJson() {
     return {
       'cookie': user_hash,
       'name': name,
       'isEnabled': isEnabled,
     };
+  }
+
+  factory CookieCardModel.empty() {
+    return CookieCardModel(
+      user_hash: '',
+      name: '',
+      isEnabled: false,
+    );
   }
 }

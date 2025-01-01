@@ -43,9 +43,22 @@ class SettingsController with ChangeNotifier {
   List<CookieCardModel> _loadCookies(SharedPreferences prefs) {
     String? cookiesString = prefs.getString('cookies');
     if (cookiesString != null) {
-      return List<String>.from(jsonDecode(cookiesString))
+      final List<CookieCardModel> cookies = List<String>.from(
+              jsonDecode(cookiesString))
           .map((cookieData) => CookieCardModel.fromJson(jsonDecode(cookieData)))
           .toList();
+
+      _enabledCookie = cookies.firstWhere(
+        (cookie) => cookie.isEnabled,
+        orElse: () => CookieCardModel.empty(),
+      );
+
+      if (_enabledCookie == null && cookies.isNotEmpty) {
+        _enabledCookie = cookies.first;
+        _enabledCookie!.isEnabled = true;
+      }
+
+      return cookies;
     }
     return [];
   }
