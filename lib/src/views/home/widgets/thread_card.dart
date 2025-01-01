@@ -36,16 +36,16 @@ class ThreadCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (isAdmin) ...[
-                    AdminText(),
+                    AdminText(user_hash: threadCardModel.user_hash,),
                   ] else ...[
                     InformationText(information: threadCardModel.user_hash),
                   ],
                   InformationText(information: forumName.toString()),
-                  InformationText(information: threadCardModel.now),
                   InformationText(
                       information: threadCardModel.ReplyCount.toString()),
                 ],
               ),
+              InformationText(information: threadCardModel.getFormattedTime()),
               SizedBox(height: 8),
               if (isSage) ...[
                 SageWidget(),

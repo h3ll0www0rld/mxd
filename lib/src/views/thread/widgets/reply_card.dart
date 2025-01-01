@@ -30,16 +30,19 @@ class ReplyCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (isAdmin) ...[
-                    AdminText(),
+                    AdminText(
+                      user_hash: replyCardModel.user_hash,
+                    ),
                   ] else if (isPO) ...[
                     POText(user_hash: replyCardModel.user_hash),
                   ] else ...[
                     InformationText(information: replyCardModel.user_hash),
                   ],
-                  InformationText(information: replyCardModel.now),
                   InformationText(information: "NO.${replyCardModel.id}"),
                 ],
               ),
+              InformationText(information: replyCardModel.getFormattedTime()),
+              SizedBox(height: 8),
               if (replyCardModel.title != "无标题") ...[
                 TitleText(title: replyCardModel.title),
                 SizedBox(height: 8),
@@ -48,7 +51,6 @@ class ReplyCard extends StatelessWidget {
                 TitleText(title: replyCardModel.name),
                 SizedBox(height: 8),
               ],
-              SizedBox(height: 8),
               HtmlContentWidget(content: replyCardModel.content),
               SizedBox(height: 8),
               if (replyCardModel.img.isNotEmpty &&

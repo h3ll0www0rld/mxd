@@ -23,4 +23,5 @@ jobs:
       - run: flutter build apk --release --target-platform android-arm,android-arm64,android-x64
       - uses: actions/upload-artifact@v4
         with:
+          name: build
           path: build/app/outputs/apk/release/*.apk

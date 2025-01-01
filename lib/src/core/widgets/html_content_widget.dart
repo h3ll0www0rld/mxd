@@ -4,6 +4,7 @@ import 'package:mxd/main.dart';
 import 'package:mxd/src/models/ref_dialog.dart';
 import 'package:mxd/src/views/thread/widgets/ref_dialog.dart';
 
+
 class HtmlContentWidget extends StatelessWidget {
   final String content;
 

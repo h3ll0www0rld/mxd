@@ -29,12 +29,12 @@ class RefDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (isAdmin) ...[
-                  AdminText(),
+                  AdminText(user_hash: refModel.user_hash,),
                 ] else ...[
                   InformationText(information: refModel.user_hash),
                 ],
                 InformationText(
-                  information: refModel.now,
+                  information: refModel.getFormattedTime()
                 ),
               ],
             ),

@@ -17,7 +17,11 @@ class CookieCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: ListTile(
-        title: Text(cookie.name),
+        title: Text(
+          cookie.name,
+          style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

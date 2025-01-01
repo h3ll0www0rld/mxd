@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mxd/src/models/cookie_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,11 +9,13 @@ class SettingsController with ChangeNotifier {
   }
 
   late ThemeMode _themeMode = ThemeMode.system;
-  late double _fontSize = 16.0;
+  late double _titleFontSize = 16.0;
+  late double _contentFontSize = 16.0;
   List<CookieCardModel> _cookies = [];
 
   ThemeMode get themeMode => _themeMode;
-  double get fontSize => _fontSize;
+  double get titleFontSize => _titleFontSize;
+  double get contentFontSize => _contentFontSize;
   List<CookieCardModel> get cookies => _cookies;
 
   CookieCardModel? _enabledCookie;
@@ -28,9 +29,20 @@ class SettingsController with ChangeNotifier {
   Future<void> _loadSettings() async {
     final prefs = await _getPrefs();
     _themeMode = _loadThemeMode(prefs);
-    _fontSize = prefs.getDouble('fontSize') ?? 16.0;
+    _titleFontSize = _loadContentFontSize(prefs);
+    _contentFontSize = _loadContentFontSize(prefs);
     _cookies = _loadCookies(prefs);
     notifyListeners();
+  }
+
+  double _loadTitleFontSize(SharedPreferences prefs) {
+    double? titleFontSize = prefs.getDouble('titleFontSize');
+    return titleFontSize ?? 16.0;
+  }
+
+  double _loadContentFontSize(SharedPreferences prefs) {
+    double? contentFontSize = prefs.getDouble('contentFontSize');
+    return contentFontSize ?? 16.0;
   }
 
   ThemeMode _loadThemeMode(SharedPreferences prefs) {
@@ -74,13 +86,24 @@ class SettingsController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateFontSize(double newFontSize) async {
-    if (newFontSize == _fontSize) return;
+  Future<void> updateTitleFontSize(double newFontSize) async {
+    if (newFontSize == _titleFontSize) return;
 
-    _fontSize = newFontSize;
+    _titleFontSize = newFontSize;
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('fontSize', newFontSize);
+    await prefs.setDouble('titleFontSize', newFontSize);
+
+    notifyListeners();
+  }
+
+  Future<void> updateContentFontSize(double newFontSize) async {
+    if (newFontSize == _contentFontSize) return;
+
+    _contentFontSize = newFontSize;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('contentFontSize', newFontSize);
 
     notifyListeners();
   }

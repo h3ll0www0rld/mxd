@@ -31,6 +31,9 @@ class CookieView extends StatelessWidget {
                     controller: _controller,
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.pasteCookieUrl,
+                      labelStyle: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.bodyMedium!.fontSize),
                       border: OutlineInputBorder(),
                     ),
                   ),

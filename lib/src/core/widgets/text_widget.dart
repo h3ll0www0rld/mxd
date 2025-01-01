@@ -30,22 +30,24 @@ class InformationText extends StatelessWidget {
       information,
       style: TextStyle(
         color: Colors.grey[600],
-        fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+        fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
       ),
     );
   }
 }
 
 class AdminText extends StatelessWidget {
-  const AdminText({super.key});
+  final String user_hash;
+
+  const AdminText({super.key, required this.user_hash});
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Admin",
+      user_hash,
       style: TextStyle(
         color: Colors.red,
-        fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+        fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
       ),
     );
   }
@@ -61,8 +63,8 @@ class POText extends StatelessWidget {
     return Text(
       user_hash,
       style: TextStyle(
-        color: Theme.of(context).highlightColor,
-        fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+        color: Theme.of(context).hintColor,
+        fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
       ),
     );
   }

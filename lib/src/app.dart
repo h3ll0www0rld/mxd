@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mxd/src/views/settings/appearance/view.dart';
 import 'package:mxd/src/views/settings/cookie/view.dart';
 import 'package:mxd/src/views/image/view.dart';
 import 'package:mxd/src/provider/forum_list.dart';
@@ -50,28 +51,24 @@ class MyApp extends StatelessWidget {
                     colorScheme: lightColorScheme,
                     useMaterial3: true,
                     textTheme: TextTheme(
-                      bodyLarge: TextStyle(
-                          fontSize: settingsController.fontSize + 6.0),
-                      bodyMedium:
-                          TextStyle(fontSize: settingsController.fontSize),
-                      bodySmall: TextStyle(
-                          fontSize: settingsController.fontSize - 6.0),
-                      titleLarge: TextStyle(
-                          fontSize: settingsController.fontSize + 6.0),
+                      titleMedium: TextStyle(
+                        fontSize: controller.titleFontSize,
+                      ),
+                      bodyMedium: TextStyle(
+                        fontSize: controller.contentFontSize,
+                      ),
                     ),
                   ),
                   darkTheme: ThemeData(
                     colorScheme: darkColorScheme,
                     useMaterial3: true,
                     textTheme: TextTheme(
-                      bodyLarge: TextStyle(
-                          fontSize: settingsController.fontSize + 6.0),
-                      bodyMedium:
-                          TextStyle(fontSize: settingsController.fontSize),
-                      bodySmall: TextStyle(
-                          fontSize: settingsController.fontSize - 6.0),
-                      titleLarge: TextStyle(
-                          fontSize: settingsController.fontSize + 6.0),
+                      titleMedium: TextStyle(
+                        fontSize: controller.titleFontSize,
+                      ),
+                      bodyMedium: TextStyle(
+                        fontSize: controller.contentFontSize,
+                      ),
                     ),
                   ),
                   themeMode: settingsController.themeMode,
@@ -91,6 +88,12 @@ class MyApp extends StatelessWidget {
                             settings: routeSettings,
                             builder: (BuildContext context) {
                               return CookieView();
+                            });
+                      case AppearanceView.routeName:
+                        return MaterialPageRoute<void>(
+                            settings: routeSettings,
+                            builder: (BuildContext context) {
+                              return AppearanceView();
                             });
                       case ThreadView.routeName:
                         final id = uri.queryParameters['id'];

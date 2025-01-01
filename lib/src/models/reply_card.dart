@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class ReplyCardModel {
   final int id;
   final String user_hash;
@@ -32,5 +34,32 @@ class ReplyCardModel {
       ext: json['ext'],
       name: json['name'],
     );
+  }
+
+  String getFormattedTime() {
+    String cleanedNow = now.replaceAll(RegExp(r'\(.*\)'), ' ').trim();
+
+    DateTime postTime = DateFormat('yyyy-MM-dd HH:mm:ss').parse(cleanedNow);
+
+    DateTime nowTime = DateTime.now();
+    String formattedTime = '';
+
+    if (postTime.year == nowTime.year) {
+      formattedTime = DateFormat('MM-dd HH:mm').format(postTime);
+    } else {
+      formattedTime = DateFormat('yyyy-MM-dd HH:mm').format(postTime);
+    }
+
+    if (postTime.year == nowTime.year &&
+        postTime.month == nowTime.month &&
+        postTime.day == nowTime.day) {
+      formattedTime = DateFormat('HH:mm').format(postTime);
+    }
+
+    if (postTime.isBefore(nowTime) && nowTime.difference(postTime).inDays == 1) {
+      formattedTime = '昨天 ${DateFormat('HH:mm').format(postTime)}';
+    }
+
+    return formattedTime;
   }
 }

@@ -16,7 +16,7 @@ class SageWidget extends StatelessWidget {
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
-          fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+          fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
         ),
       ),
     );

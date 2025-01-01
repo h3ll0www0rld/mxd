@@ -12,7 +12,9 @@
   "jumpToThread": "跳转到该串",
   "loading": "加载中...",
   "retry": "重试",
-  "fontSize": "字体大小",
   "cookieManager": "Cookie 管理",
+  "appearanceManager": "外观设置",
+  "titleFontSize": "标题字体大小",
+  "contentFontSize": "内容字体大小",
   "pasteCookieUrl": "将Cookie二维码URL粘贴到这里"
 }
