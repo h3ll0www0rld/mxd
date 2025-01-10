@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mxd/main.dart';
 import 'package:mxd/src/provider/forum_list.dart';
 import 'package:mxd/src/views/home/service.dart';
 import 'package:mxd/src/views/home/widgets/thread_card.dart';
 import 'package:mxd/src/models/thread_card.dart';
+import 'package:mxd/src/views/settings/view.dart';
 import 'package:provider/provider.dart';
-import '../settings/view.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({
-    super.key,
-  });
+  const HomeView({super.key});
 
   static const routeName = '/';
 
@@ -26,10 +23,8 @@ class HomeViewState extends State<HomeView> {
   bool _isLoading = false;
   bool _hasMoreData = true;
   dynamic _selectedForumID = 'timeline_1';
-  bool _errorLoadingThreads = false;
   String? _errorMessage;
-
-  final HomeService _homeService = HomeService();
+  List<dynamic> _forumList = [];
 
   @override
   void initState() {
@@ -38,39 +33,35 @@ class HomeViewState extends State<HomeView> {
     _scrollController.addListener(_scrollListener);
   }
 
-  Future<void> _initializeData() async {
-    await _getForumList();
-    await _getThreads();
-  }
-
   void _scrollListener() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        !_isLoading &&
-        _hasMoreData) {
-      _getThreads();
+    if (_scrollController.position.atEdge &&
+        _scrollController.position.pixels > 0) {
+      if (!_isLoading && _hasMoreData) {
+        _getThreads();
+      }
     }
   }
 
+  Future<void> _initializeData() async {
+    await _getForumList();
+  }
+
   Future<void> _getForumList() async {
-    setState(() {
-      _isLoading = true;
-    });
-
+    setState(() => _isLoading = true);
     try {
-      final forumData = await _homeService.getForumList(context);
+      final forumList = await HomeService().getForumList(context);
+      setState(() {
+        _forumList = forumList;
+        _isLoading = false;
+      });
 
-      Provider.of<ForumProvider>(context, listen: false).setForums(forumData);
+      if (_threads.isEmpty && forumList.isNotEmpty) {
+        await _refreshThreads(_selectedForumID);
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error fetching forums: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
       setState(() {
         _isLoading = false;
+        _errorMessage = 'Error fetching forums.';
       });
     }
   }
@@ -78,41 +69,31 @@ class HomeViewState extends State<HomeView> {
   Future<void> _getThreads() async {
     if (_isLoading) return;
 
-    setState(() {
-      _isLoading = true;
-      _errorLoadingThreads = false;
-    });
-
+    setState(() => _isLoading = true);
     try {
-      List rawData;
-
-      if (_selectedForumID is String &&
-          _selectedForumID.startsWith('timeline_')) {
-        final timelineId = int.parse(
-            _selectedForumID.toString().replaceFirst('timeline_', ''));
-        rawData = await nmbxdClient.fetchTimeLineByID(
-            timelineId, _currentPage, context);
-      } else {
-        rawData = await nmbxdClient.fetchForumByFID(
-            int.parse(_selectedForumID.toString()), _currentPage, context);
-      }
+      final rawData = await (_selectedForumID.startsWith('timeline_')
+          ? HomeService().getThreads(
+              int.parse(_selectedForumID.replaceFirst('timeline_', '')),
+              _currentPage,
+              context,
+            )
+          : HomeService().getThreads(
+              int.parse(_selectedForumID.toString()),
+              _currentPage,
+              context,
+            ));
 
       setState(() {
-        _threads.addAll(rawData
-            .map<ThreadCardModel>((json) => ThreadCardModel.fromJson(json))
-            .toList());
+        _threads.addAll(rawData);
         _currentPage++;
         _hasMoreData = rawData.isNotEmpty;
       });
     } catch (e) {
       setState(() {
-        _errorLoadingThreads = true;
-        _errorMessage = 'Error fetching threads: $e';
+        _errorMessage = 'Error fetching threads.';
       });
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
@@ -126,116 +107,92 @@ class HomeViewState extends State<HomeView> {
     await _getThreads();
   }
 
-  Future<void> _retryGetThreads() async {
-    setState(() {
-      _errorLoadingThreads = false;
-    });
-    await _getThreads();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
       appBar: AppBar(
         title: Consumer<ForumProvider>(
           builder: (context, forumProvider, child) {
-            if (forumProvider.isLoading) {
-              return Text(AppLocalizations.of(context)!.loading);
-            }
-            return Text(forumProvider.findForumNameByFId(_selectedForumID));
+            return Text(forumProvider.isLoading
+                ? AppLocalizations.of(context)?.loading ?? 'Loading'
+                : forumProvider.findForumNameByFId(_selectedForumID));
           },
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, SettingsView.routeName);
-              },
-              icon: Icon(Icons.settings))
+            icon: const Icon(Icons.settings),
+            onPressed: () =>
+                Navigator.pushNamed(context, SettingsView.routeName),
+          )
         ],
       ),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _errorLoadingThreads
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.error, color: Colors.red, size: 50),
-                    Text(
-                      _errorMessage ?? 'An error occurred.',
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _retryGetThreads,
-                      child: Text(AppLocalizations.of(context)!.retry),
-                    ),
-                  ],
-                ),
-              )
-            : RefreshIndicator(
-                onRefresh: () => _refreshThreads(_selectedForumID),
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: _threads.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index < _threads.length) {
-                      return ThreadCard(threadCardModel: _threads[index]);
-                    } else if (_isLoading) {
-                      return Center(child: CircularProgressIndicator());
-                    } else {
-                      return SizedBox();
-                    }
-                  },
-                ),
-              ),
-      ),
-      drawer: Consumer<ForumProvider>(
-        builder: (context, forumProvider, child) {
-          return Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  decoration:
-                      BoxDecoration(color: Theme.of(context).primaryColor),
-                  child: Text(
-                    AppLocalizations.of(context)!.appTitle,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize:
-                            Theme.of(context).textTheme.bodyLarge!.fontSize),
-                  ),
-                ),
-                ...forumProvider.forums.map((forum) {
-                  return ExpansionTile(
-                    title: Text(forum['name']),
-                    children: (forum['forums'] as List).map<Widget>((subForum) {
-                      return ListTile(
-                        title: Text(
-                          subForum['name'],
-                          style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .fontSize,
+      body: _isLoading && _threads.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: () => _refreshThreads(_selectedForumID),
+              child: _errorMessage != null
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error, color: Colors.red, size: 50),
+                          Text(
+                            _errorMessage!,
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                        onTap: () {
-                          _selectedForumID = subForum['id'];
-                          _refreshThreads(_selectedForumID);
-                          Navigator.pop(context);
-                        },
-                      );
-                    }).toList(),
-                  );
-                }),
-              ],
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: _getThreads,
+                            child: Text(
+                                AppLocalizations.of(context)?.retry ?? 'Retry'),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _threads.length + (_hasMoreData ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index < _threads.length) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: ThreadCard(threadCardModel: _threads[index]),
+                          );
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
             ),
-          );
-        },
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+              child: Text(
+                AppLocalizations.of(context)?.appTitle ?? 'App Title',
+                style: const TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+            ..._forumList.map((forum) {
+              return ExpansionTile(
+                title: Text(forum['name']),
+                children: (forum['forums'] as List).map<Widget>((subForum) {
+                  return ListTile(
+                    title: Text(subForum['name']),
+                    onTap: () {
+                      _refreshThreads(subForum['id']);
+                      Navigator.pop(context);
+                    },
+                  );
+                }).toList(),
+              );
+            }),
+          ],
+        ),
       ),
     );
   }

@@ -12,14 +12,15 @@ class SettingsController with ChangeNotifier {
   late double _titleFontSize = 16.0;
   late double _contentFontSize = 16.0;
   List<CookieCardModel> _cookies = [];
+  List<Map<String, dynamic>>? _forumData;
 
   ThemeMode get themeMode => _themeMode;
   double get titleFontSize => _titleFontSize;
   double get contentFontSize => _contentFontSize;
   List<CookieCardModel> get cookies => _cookies;
+  List<Map<String, dynamic>>? get forumData => _forumData;
 
   CookieCardModel? _enabledCookie;
-
   CookieCardModel? get enabledCookie => _enabledCookie;
 
   Future<SharedPreferences> _getPrefs() async {
@@ -29,11 +30,31 @@ class SettingsController with ChangeNotifier {
   Future<void> _loadSettings() async {
     final prefs = await _getPrefs();
     _themeMode = _loadThemeMode(prefs);
-    _titleFontSize = _loadContentFontSize(prefs);
+    _titleFontSize = _loadTitleFontSize(prefs);
     _contentFontSize = _loadContentFontSize(prefs);
     _cookies = _loadCookies(prefs);
+    _forumData = _loadForumData(prefs);
     notifyListeners();
   }
+
+  List<Map<String, dynamic>>? _loadForumData(SharedPreferences prefs) {
+    final forumDataString = prefs.getString('forumData');
+    if (forumDataString != null) {
+      return List<Map<String, dynamic>>.from(jsonDecode(forumDataString));
+    }
+    return null;
+  } 
+
+  Future<void> _saveForumData(List<Map<String, dynamic>> forumData) async {
+    final prefs = await _getPrefs();
+    await prefs.setString('forumData', jsonEncode(forumData));
+  }
+
+  Future<void> updateForumData(List<Map<String, dynamic>> newForumData) async {
+    _forumData = newForumData;
+    await _saveForumData(newForumData);
+    notifyListeners();
+  } 
 
   double _loadTitleFontSize(SharedPreferences prefs) {
     double? titleFontSize = prefs.getDouble('titleFontSize');

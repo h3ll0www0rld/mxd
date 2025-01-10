@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:mxd/main.dart';
 import 'package:mxd/src/models/thread_card.dart';
+import 'package:mxd/src/provider/forum_list.dart';
+import 'package:mxd/src/views/settings/controller.dart';
+import 'package:provider/provider.dart';
 
 class HomeService {
-  Future<List> getForumList(BuildContext context) async {
+  Future<List<Map<String, dynamic>>> getForumList(BuildContext context,
+      {bool forceRefresh = false}) async {
     try {
+      final settingsController =
+          Provider.of<SettingsController>(context, listen: false);
+      final forumProvider = Provider.of<ForumProvider>(context, listen: false);
+
+      if (!forceRefresh) {
+        final cachedForumData = settingsController.forumData;
+
+        if (cachedForumData != null) {
+          // 如果缓存中有数据且不强制刷新，直接返回
+          forumProvider.setForums(cachedForumData);
+          return cachedForumData;
+        }
+      }
+
       final forumFuture = nmbxdClient.fetchForumList(context);
       final timelineFuture = nmbxdClient.fetchTimeLineList(context);
 
@@ -30,6 +48,15 @@ class HomeService {
 
       filteredForumList
           .add({'id': '-1', 'name': '时间线', 'forums': timelineForums});
+
+      filteredForumList
+          .add({'id': '-1', 'name': '时间线', 'forums': timelineForums});
+
+      // 更新缓存
+      settingsController.updateForumData(filteredForumList);
+
+      // 更新 ForumProvider 的状态
+      forumProvider.setForums(filteredForumList);
 
       return filteredForumList;
     } on Exception {

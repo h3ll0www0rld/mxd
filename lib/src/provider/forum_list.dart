@@ -6,13 +6,16 @@ class ForumProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   void setForums(List<dynamic> forumData) {
-    forums = forumData;
-    _isLoading = false;
-    notifyListeners();
+    if (forums != forumData) {
+      forums = forumData;
+      Future.microtask(() {
+        _isLoading = false;
+        notifyListeners(); 
+      });
+    }
   }
 
   String findForumNameByFId(dynamic fid) {
-    _isLoading = false;
     for (var forum in forums) {
       for (var subForum in forum['forums']) {
         if (subForum['id'].toString() == fid.toString()) {

@@ -5,6 +5,7 @@ import 'package:mxd/src/views/settings/appearance/view.dart';
 import 'package:mxd/src/views/settings/cookie/view.dart';
 import 'package:mxd/src/views/image/view.dart';
 import 'package:mxd/src/provider/forum_list.dart';
+import 'package:mxd/src/views/settings/performance/view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mxd/src/views/home/view.dart';
@@ -94,6 +95,12 @@ class MyApp extends StatelessWidget {
                             settings: routeSettings,
                             builder: (BuildContext context) {
                               return AppearanceView();
+                            });
+                      case PerformanceView.routeName:
+                        return MaterialPageRoute<void>(
+                            settings: routeSettings,
+                            builder: (BuildContext context) {
+                              return PerformanceView();
                             });
                       case ThreadView.routeName:
                         final id = uri.queryParameters['id'];

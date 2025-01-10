@@ -16,5 +16,9 @@
   "appearanceManager": "外观设置",
   "titleFontSize": "标题字体大小",
   "contentFontSize": "内容字体大小",
-  "pasteCookieUrl": "将Cookie二维码URL粘贴到这里"
+  "pasteCookieUrl": "将Cookie二维码URL粘贴到这里",
+  "performanceManager": "性能设置",
+  "refreshForums": "刷新缓存的版面",
+  "refreshSuccess": "刷新成功",
+  "refreshFailed": "刷新失败"
 }

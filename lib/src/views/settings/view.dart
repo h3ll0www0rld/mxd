@@ -39,6 +39,25 @@ class SettingsView extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
+                Navigator.pushNamed(context, "/performance");
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.speed),
+                    Container(
+                      width: 16,
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.performanceManager,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
                 Navigator.pushNamed(context, "/cookie");
               },
               child: Container(
