@@ -7,18 +7,19 @@ class ForumProvider with ChangeNotifier {
 
   void setForums(List<dynamic> forumData) {
     forums = forumData;
+    _isLoading = false;
     notifyListeners();
   }
 
-  String findForumNameByFId(int fid) {
+  String findForumNameByFId(dynamic fid) {
     _isLoading = false;
-    for (var category in forums) {
-      for (var forum in category['forums']) {
-        if (int.parse(forum['id']) == fid) {
-          return forum['name'];
+    for (var forum in forums) {
+      for (var subForum in forum['forums']) {
+        if (subForum['id'].toString() == fid.toString()) {
+          return subForum['name'];
         }
       }
     }
-    return "Error";
+    return 'Unknown';
   }
 }

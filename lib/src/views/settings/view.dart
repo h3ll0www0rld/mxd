@@ -26,7 +26,7 @@ class SettingsView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Row(
                   children: [
-                    Icon(Icons.home),
+                    Icon(Icons.draw),
                     Container(
                       width: 16,
                     ),

@@ -22,7 +22,7 @@ class HomeService {
 
       final timelineForums = timelineList.map((timeline) {
         return {
-          'id': timeline['id'].toString(),
+          'id': 'timeline_${timeline['id']}',
           'name': timeline['display_name'],
           'msg': timeline['notice'] ?? ''
         };

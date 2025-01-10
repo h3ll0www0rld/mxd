@@ -6,7 +6,8 @@ class CookieCard extends StatelessWidget {
   final ValueChanged<CookieCardModel> onChanged;
   final VoidCallback onDelete;
 
-  CookieCard({
+  const CookieCard({
+    super.key,
     required this.cookie,
     required this.onChanged,
     required this.onDelete,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mxd/main.dart';
 import 'package:mxd/src/provider/forum_list.dart';
 import 'package:mxd/src/views/home/service.dart';
 import 'package:mxd/src/views/home/widgets/thread_card.dart';
@@ -15,16 +16,16 @@ class HomeView extends StatefulWidget {
   static const routeName = '/';
 
   @override
-  _HomeViewState createState() => _HomeViewState();
+  HomeViewState createState() => HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class HomeViewState extends State<HomeView> {
   final ScrollController _scrollController = ScrollController();
   final List<ThreadCardModel> _threads = [];
   int _currentPage = 1;
   bool _isLoading = false;
   bool _hasMoreData = true;
-  int _selectedForumID = 1;
+  dynamic _selectedForumID = 'timeline_1';
   bool _errorLoadingThreads = false;
   String? _errorMessage;
 
@@ -83,13 +84,25 @@ class _HomeViewState extends State<HomeView> {
     });
 
     try {
-      final data = await _homeService.getThreads(
-          _selectedForumID, _currentPage, context);
+      List rawData;
+
+      if (_selectedForumID is String &&
+          _selectedForumID.startsWith('timeline_')) {
+        final timelineId = int.parse(
+            _selectedForumID.toString().replaceFirst('timeline_', ''));
+        rawData = await nmbxdClient.fetchTimeLineByID(
+            timelineId, _currentPage, context);
+      } else {
+        rawData = await nmbxdClient.fetchForumByFID(
+            int.parse(_selectedForumID.toString()), _currentPage, context);
+      }
 
       setState(() {
-        _threads.addAll(data);
+        _threads.addAll(rawData
+            .map<ThreadCardModel>((json) => ThreadCardModel.fromJson(json))
+            .toList());
         _currentPage++;
-        _hasMoreData = data.isNotEmpty;
+        _hasMoreData = rawData.isNotEmpty;
       });
     } catch (e) {
       setState(() {
@@ -103,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  Future<void> _refreshThreads(int fid) async {
+  Future<void> _refreshThreads(dynamic fid) async {
     setState(() {
       _threads.clear();
       _currentPage = 1;
@@ -211,10 +224,8 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ),
                         onTap: () {
-                          setState(() {
-                            _selectedForumID = int.parse(subForum['id']);
-                            _refreshThreads(_selectedForumID);
-                          });
+                          _selectedForumID = subForum['id'];
+                          _refreshThreads(_selectedForumID);
                           Navigator.pop(context);
                         },
                       );

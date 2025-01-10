@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppearanceView extends StatelessWidget {
-  AppearanceView({super.key});
+  const AppearanceView({super.key});
   static const routeName = '/appearance';
 
   @override

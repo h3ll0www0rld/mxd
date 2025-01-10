@@ -25,7 +25,7 @@ class ThreadCard extends StatelessWidget {
             '/thread?id=${threadCardModel.id}&fid=${threadCardModel.fid}');
       },
       child: Card(
-        color: Theme.of(context).splashColor,
+        color: Theme.of(context).colorScheme.surfaceContainer,
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),

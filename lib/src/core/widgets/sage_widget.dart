@@ -6,7 +6,7 @@ class SageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
       decoration: BoxDecoration(
         color: Colors.red,
         borderRadius: BorderRadius.circular(8),
@@ -16,7 +16,7 @@ class SageWidget extends StatelessWidget {
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
-          fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
+          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize! - 2,
         ),
       ),
     );

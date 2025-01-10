@@ -63,7 +63,7 @@ class POText extends StatelessWidget {
     return Text(
       user_hash,
       style: TextStyle(
-        color: Theme.of(context).hintColor,
+        color: Theme.of(context).colorScheme.primary,
         fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
       ),
     );
