@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mxd/main.dart';
 import 'package:mxd/src/models/thread_card.dart';
-import 'package:mxd/src/provider/forum_list.dart';
+import 'package:mxd/src/provider/forum.dart';
 import 'package:mxd/src/views/settings/controller.dart';
 import 'package:provider/provider.dart';
 
 class HomeService {
-  Future<List<Map<String, dynamic>>> getForumList(BuildContext context,
+  Future<List<Map<String, dynamic>>> getCategoryForumList(BuildContext context,
       {bool forceRefresh = false}) async {
     try {
       final settingsController =
@@ -23,22 +23,22 @@ class HomeService {
         }
       }
 
-      final forumFuture = nmbxdClient.fetchForumList(context);
-      final timelineFuture = nmbxdClient.fetchTimeLineList(context);
+      final forumListFuture = nmbxdClient.fetchForumList(context);
+      final timelineListFuture = nmbxdClient.fetchTimeLineList(context);
 
-      final results = await Future.wait([forumFuture, timelineFuture]);
+      final results = await Future.wait([forumListFuture, timelineListFuture]);
 
       final forumList = results[0];
       final timelineList = results[1];
 
-      final filteredForumList = forumList.map((category) {
+      final categoryForumList = forumList.map((category) {
         final filteredForums = (category['forums'] as List)
             .where((forum) => forum['id'] != '-1')
             .toList();
         return {...category, 'forums': filteredForums};
       }).toList();
 
-      final timelineForums = timelineList.map((timeline) {
+      final categoryTimelineList = timelineList.map((timeline) {
         return {
           'id': 'timeline_${timeline['id']}',
           'name': timeline['display_name'],
@@ -46,35 +46,34 @@ class HomeService {
         };
       }).toList();
 
-      filteredForumList
-          .add({'id': '-1', 'name': '时间线', 'forums': timelineForums});
-
-      filteredForumList
-          .add({'id': '-1', 'name': '时间线', 'forums': timelineForums});
+      categoryForumList
+          .add({'id': '-1', 'name': '时间线', 'forums': categoryTimelineList});
 
       // 更新缓存
-      settingsController.updateForumData(filteredForumList);
+      settingsController.updateForumData(categoryForumList);
+      forumProvider.setForums(categoryForumList);
 
-      // 更新 ForumProvider 的状态
-      forumProvider.setForums(filteredForumList);
-
-      return filteredForumList;
+      return categoryForumList;
     } on Exception {
       rethrow;
     }
   }
 
   Future<List<ThreadCardModel>> getThreads(
-      int selectedForumID, int currentPage, BuildContext context) async {
+      String fid, int currentPage, BuildContext context) async {
     try {
       List rawData;
 
-      if (selectedForumID >= 1 && selectedForumID <= 3) {
+      if (fid.startsWith('timeline_')) {
+        final timelineID = int.parse(fid.split('_').last);
+        
         rawData = await nmbxdClient.fetchTimeLineByID(
-            selectedForumID, currentPage, context);
+            timelineID, currentPage, context);
+        
       } else {
-        rawData = await nmbxdClient.fetchForumByFID(
-            selectedForumID, currentPage, context);
+        final forumID = int.parse(fid);
+        rawData =
+            await nmbxdClient.fetchForumByFID(forumID, currentPage, context);
       }
 
       return rawData

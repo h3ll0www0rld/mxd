@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mxd/src/provider/forum_list.dart';
+import 'package:mxd/src/core/widgets/error_with_retry.dart';
+import 'package:mxd/src/provider/forum.dart';
 import 'package:mxd/src/views/home/service.dart';
 import 'package:mxd/src/views/home/widgets/thread_card.dart';
 import 'package:mxd/src/models/thread_card.dart';
@@ -18,13 +19,15 @@ class HomeView extends StatefulWidget {
 
 class HomeViewState extends State<HomeView> {
   final ScrollController _scrollController = ScrollController();
+
   final List<ThreadCardModel> _threads = [];
   int _currentPage = 1;
   bool _isLoading = false;
   bool _hasMoreData = true;
-  dynamic _selectedForumID = 'timeline_1';
+  // 默认首页为综合线
+  String _selectedForumID = 'timeline_1';
   String? _errorMessage;
-  List<dynamic> _forumList = [];
+  List<dynamic> _categoryForumList = [];
 
   @override
   void initState() {
@@ -43,25 +46,28 @@ class HomeViewState extends State<HomeView> {
   }
 
   Future<void> _initializeData() async {
-    await _getForumList();
+    _getCategoryForumList();
   }
 
-  Future<void> _getForumList() async {
+  // 初始化版面数据
+  Future<void> _getCategoryForumList() async {
     setState(() => _isLoading = true);
     try {
-      final forumList = await HomeService().getForumList(context);
+      final categoryForumList =
+          await HomeService().getCategoryForumList(context);
+
       setState(() {
-        _forumList = forumList;
+        _categoryForumList = categoryForumList;
         _isLoading = false;
       });
 
-      if (_threads.isEmpty && forumList.isNotEmpty) {
+      if (_threads.isEmpty && categoryForumList.isNotEmpty) {
         await _refreshThreads(_selectedForumID);
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Error fetching forums.';
+        _errorMessage = e.toString();
       });
     }
   }
@@ -69,19 +75,14 @@ class HomeViewState extends State<HomeView> {
   Future<void> _getThreads() async {
     if (_isLoading) return;
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
     try {
-      final rawData = await (_selectedForumID.startsWith('timeline_')
-          ? HomeService().getThreads(
-              int.parse(_selectedForumID.replaceFirst('timeline_', '')),
-              _currentPage,
-              context,
-            )
-          : HomeService().getThreads(
-              int.parse(_selectedForumID.toString()),
-              _currentPage,
-              context,
-            ));
+      final rawData = await HomeService()
+          .getThreads(_selectedForumID, _currentPage, context);
 
       setState(() {
         _threads.addAll(rawData);
@@ -90,7 +91,7 @@ class HomeViewState extends State<HomeView> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error fetching threads.';
+        _errorMessage = e.toString();
       });
     } finally {
       setState(() => _isLoading = false);
@@ -109,91 +110,200 @@ class HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Consumer<ForumProvider>(
-          builder: (context, forumProvider, child) {
-            return Text(forumProvider.isLoading
-                ? AppLocalizations.of(context)?.loading ?? 'Loading'
-                : forumProvider.findForumNameByFId(_selectedForumID));
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () =>
-                Navigator.pushNamed(context, SettingsView.routeName),
-          )
-        ],
-      ),
-      body: _isLoading && _threads.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: () => _refreshThreads(_selectedForumID),
-              child: _errorMessage != null
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 50),
-                          Text(
-                            _errorMessage!,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: _getThreads,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isLargeScreen = constraints.maxWidth >= 800;
+
+        return isLargeScreen
+            ? Scaffold(
+                body: Row(
+                  children: [
+                    // 左侧 Drawer
+                    SizedBox(
+                      width: 250,
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        children: <Widget>[
+                          DrawerHeader(
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary),
                             child: Text(
-                                AppLocalizations.of(context)?.retry ?? 'Retry'),
+                              AppLocalizations.of(context)!.appTitle,
+                              style: const TextStyle(fontSize: 28),
+                            ),
+                          ),
+                          ..._categoryForumList.map((forum) {
+                            return ExpansionTile(
+                              tilePadding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              childrenPadding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              title: Text(forum['name']),
+                              children: (forum['forums'] as List)
+                                  .map<Widget>((subForum) {
+                                return ListTile(
+                                  title: Text(subForum['name']),
+                                  onTap: () {
+                                    _refreshThreads(subForum['id']);
+                                  },
+                                );
+                              }).toList(),
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                    // 右侧 AppBar + 内容
+                    Expanded(
+                      child: Column(
+                        children: [
+                          AppBar(
+                            title: Consumer<ForumProvider>(
+                              builder: (context, forumProvider, child) {
+                                return Text(forumProvider.isLoading
+                                    ? AppLocalizations.of(context)!.loading
+                                    : forumProvider.findForumNameByFId(
+                                        _selectedForumID, context));
+                              },
+                            ),
+                            actions: [
+                              IconButton(
+                                icon: const Icon(Icons.settings),
+                                onPressed: () => Navigator.pushNamed(
+                                    context, SettingsView.routeName),
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: _isLoading && _threads.isEmpty
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : RefreshIndicator(
+                                    onRefresh: () =>
+                                        _refreshThreads(_selectedForumID),
+                                    child: _errorMessage != null
+                                        ? Center(
+                                            child: ErrorWithRetryWidget(
+                                                error: _errorMessage ??
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .unknownError,
+                                                retry: _getThreads),
+                                          )
+                                        : ListView.builder(
+                                            controller: _scrollController,
+                                            itemCount: _threads.length +
+                                                (_hasMoreData ? 1 : 0),
+                                            itemBuilder: (context, index) {
+                                              if (index < _threads.length) {
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 12.0),
+                                                  child: ThreadCard(
+                                                      threadCardModel:
+                                                          _threads[index]),
+                                                );
+                                              } else {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+                                            },
+                                          ),
+                                  ),
                           ),
                         ],
                       ),
-                    )
-                  : ListView.builder(
-                      controller: _scrollController,
-                      itemCount: _threads.length + (_hasMoreData ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index < _threads.length) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: ThreadCard(threadCardModel: _threads[index]),
-                          );
-                        } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                      },
                     ),
-            ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-              child: Text(
-                AppLocalizations.of(context)?.appTitle ?? 'App Title',
-                style: const TextStyle(color: Colors.white, fontSize: 20),
-              ),
-            ),
-            ..._forumList.map((forum) {
-              return ExpansionTile(
-                title: Text(forum['name']),
-                children: (forum['forums'] as List).map<Widget>((subForum) {
-                  return ListTile(
-                    title: Text(subForum['name']),
-                    onTap: () {
-                      _refreshThreads(subForum['id']);
-                      Navigator.pop(context);
+                  ],
+                ),
+              )
+            : Scaffold(
+                appBar: AppBar(
+                  title: Consumer<ForumProvider>(
+                    builder: (context, forumProvider, child) {
+                      return Text(forumProvider.isLoading
+                          ? AppLocalizations.of(context)!.loading
+                          : forumProvider.findForumNameByFId(
+                              _selectedForumID, context));
                     },
-                  );
-                }).toList(),
+                  ),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, SettingsView.routeName),
+                    ),
+                  ],
+                ),
+                drawer: Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      DrawerHeader(
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary),
+                        child: Text(
+                          AppLocalizations.of(context)!.appTitle,
+                          style: const TextStyle(fontSize: 28),
+                        ),
+                      ),
+                      ..._categoryForumList.map((forum) {
+                        return ExpansionTile(
+                          tilePadding:
+                              const EdgeInsets.symmetric(horizontal: 12.0),
+                          childrenPadding:
+                              const EdgeInsets.symmetric(horizontal: 12.0),
+                          title: Text(forum['name']),
+                          children:
+                              (forum['forums'] as List).map<Widget>((subForum) {
+                            return ListTile(
+                              title: Text(subForum['name']),
+                              onTap: () {
+                                Navigator.pop(context);
+                                _refreshThreads(subForum['id']);
+                              },
+                            );
+                          }).toList(),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                body: _isLoading && _threads.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : RefreshIndicator(
+                        onRefresh: () => _refreshThreads(_selectedForumID),
+                        child: _errorMessage != null
+                            ? Center(
+                                child: ErrorWithRetryWidget(
+                                    error: _errorMessage ??
+                                        AppLocalizations.of(context)!
+                                            .unknownError,
+                                    retry: _getThreads),
+                              )
+                            : ListView.builder(
+                                controller: _scrollController,
+                                itemCount:
+                                    _threads.length + (_hasMoreData ? 1 : 0),
+                                itemBuilder: (context, index) {
+                                  if (index < _threads.length) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0),
+                                      child: ThreadCard(
+                                          threadCardModel: _threads[index]),
+                                    );
+                                  } else {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                },
+                              ),
+                      ),
               );
-            }),
-          ],
-        ),
-      ),
+      },
     );
   }
 

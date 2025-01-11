@@ -19,6 +19,21 @@ class TitleText extends StatelessWidget {
   }
 }
 
+class WidgetText extends StatelessWidget {
+  final String text;
+
+  const WidgetText({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style:
+          TextStyle(fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
+    );
+  }
+}
+
 class InformationText extends StatelessWidget {
   final String information;
 

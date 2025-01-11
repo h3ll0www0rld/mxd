@@ -13,9 +13,7 @@ class ImageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.viewImage),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.viewImage)),
       body: Center(
         child: InteractiveViewer(
           minScale: 0.5,
@@ -28,20 +26,8 @@ class ImageView extends StatelessWidget {
               fit: BoxFit.contain,
               errorBuilder:
                   (BuildContext context, Object error, StackTrace? stackTrace) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.error, color: Colors.red, size: 50),
-                    const SizedBox(height: 10),
-                    Text(
-                      AppLocalizations.of(context)!.imageLoadError,
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize:
-                              Theme.of(context).textTheme.bodyLarge!.fontSize),
-                    ),
-                  ],
-                );
+                return ErrorWidget(
+                    AppLocalizations.of(context)!.imageLoadError);
               },
             ),
           ),

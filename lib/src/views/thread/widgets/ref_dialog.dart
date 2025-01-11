@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mxd/main.dart';
-import 'package:mxd/src/core/widgets/html_preview_widget.dart';
-import 'package:mxd/src/core/widgets/image_widget.dart';
-import 'package:mxd/src/core/widgets/sage_widget.dart';
-import 'package:mxd/src/core/widgets/text_widget.dart';
+import 'package:mxd/src/core/widgets/html_preview.dart';
+import 'package:mxd/src/core/widgets/image.dart';
+import 'package:mxd/src/core/widgets/sage.dart';
+import 'package:mxd/src/core/widgets/text.dart';
 import 'package:mxd/src/models/ref_dialog.dart';
 import 'package:mxd/src/models/thread_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

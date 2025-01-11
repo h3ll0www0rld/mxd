@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mxd/src/core/widgets/text.dart';
 import 'package:mxd/src/models/cookie_card.dart';
 
 class CookieCard extends StatelessWidget {
@@ -16,13 +17,9 @@ class CookieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
       child: ListTile(
-        title: Text(
-          cookie.name,
-          style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
-        ),
+        title: WidgetText(text: cookie.name),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mxd/src/core/widgets/text.dart';
 import 'controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -11,9 +12,7 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.settingsTitle),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settingsTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -27,12 +26,8 @@ class SettingsView extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.draw),
-                    Container(
-                      width: 16,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.appearanceManager,
-                    ),
+                    Container(width: 16),
+                    WidgetText(text: AppLocalizations.of(context)!.appearanceManager),
                   ],
                 ),
               ),
@@ -46,12 +41,8 @@ class SettingsView extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.speed),
-                    Container(
-                      width: 16,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.performanceManager,
-                    ),
+                    Container(width: 16),
+                    WidgetText(text: AppLocalizations.of(context)!.performanceManager),
                   ],
                 ),
               ),
@@ -65,12 +56,8 @@ class SettingsView extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.cookie),
-                    Container(
-                      width: 16,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.cookieManager,
-                    ),
+                    Container(width: 16),
+                    WidgetText(text: AppLocalizations.of(context)!.cookieManager),
                   ],
                 ),
               ),

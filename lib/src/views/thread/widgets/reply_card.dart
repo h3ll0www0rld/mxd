@@ -1,9 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:mxd/src/core/widgets/html_content_widget.dart';
-import 'package:mxd/src/core/widgets/image_widget.dart';
-import 'package:mxd/src/core/widgets/text_widget.dart';
+import 'package:mxd/src/core/widgets/html_content.dart';
+import 'package:mxd/src/core/widgets/image.dart';
+import 'package:mxd/src/core/widgets/text.dart';
 import 'package:mxd/src/models/reply_card.dart';
 
 class ReplyCard extends StatelessWidget {

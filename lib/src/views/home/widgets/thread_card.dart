@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mxd/src/core/widgets/html_preview_widget.dart';
-import 'package:mxd/src/core/widgets/image_widget.dart';
-import 'package:mxd/src/core/widgets/sage_widget.dart';
-import 'package:mxd/src/core/widgets/text_widget.dart';
-import 'package:mxd/src/provider/forum_list.dart';
+import 'package:mxd/src/core/widgets/html_preview.dart';
+import 'package:mxd/src/core/widgets/image.dart';
+import 'package:mxd/src/core/widgets/sage.dart';
+import 'package:mxd/src/core/widgets/text.dart';
+import 'package:mxd/src/provider/forum.dart';
 import 'package:mxd/src/models/thread_card.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,8 @@ class ThreadCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final forumProvider = Provider.of<ForumProvider>(context);
-    final forumName = forumProvider.findForumNameByFId(threadCardModel.fid);
+    final forumName =
+        forumProvider.findForumNameByFId(threadCardModel.fid, context);
     final isAdmin = threadCardModel.admin == 1;
     final isSage = threadCardModel.sage == 1;
 
@@ -36,7 +37,9 @@ class ThreadCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (isAdmin) ...[
-                    AdminText(user_hash: threadCardModel.user_hash,),
+                    AdminText(
+                      user_hash: threadCardModel.user_hash,
+                    ),
                   ] else ...[
                     InformationText(information: threadCardModel.user_hash),
                   ],

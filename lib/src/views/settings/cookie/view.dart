@@ -17,9 +17,7 @@ class CookieView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.cookieManager),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.cookieManager)),
       body: Column(
         children: [
           Padding(
@@ -41,6 +39,7 @@ class CookieView extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
+                    // 从输入URI解析饼干
                     final uriText = _controller.text;
                     if (uriText.isNotEmpty) {
                       final uri = Uri.parse(uriText);
@@ -49,7 +48,6 @@ class CookieView extends StatelessWidget {
                       if (textParam != null) {
                         final decodedText =
                             utf8.decode(base64Decode(textParam));
-
                         Provider.of<SettingsController>(context, listen: false)
                             .addCookie(decodedText);
                         _controller.clear();

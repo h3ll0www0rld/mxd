@@ -20,5 +20,8 @@
   "performanceManager": "性能设置",
   "refreshForums": "刷新缓存的版面",
   "refreshSuccess": "刷新成功",
-  "refreshFailed": "刷新失败"
+  "refreshFailed": "刷新失败",
+  "unknownForum": "未知版面",
+  "unknownError": "未知错误",
+  "fetchForumsError": "获取版面列表失败"
 }

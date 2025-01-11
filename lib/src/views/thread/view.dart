@@ -1,11 +1,13 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:mxd/src/provider/forum_list.dart';
+import 'package:mxd/src/core/widgets/error_with_retry.dart';
+import 'package:mxd/src/provider/forum.dart';
 import 'package:mxd/src/views/thread/service.dart';
 import 'package:mxd/src/views/thread/widgets/reply_card.dart';
 import 'package:mxd/src/models/reply_card.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ThreadView extends StatefulWidget {
   final int threadID;
@@ -34,6 +36,7 @@ class _ThreadViewState extends State<ThreadView> {
   String? po_hash;
 
   final ThreadService _threadService = ThreadService();
+
   @override
   void initState() {
     super.initState();
@@ -82,7 +85,7 @@ class _ThreadViewState extends State<ThreadView> {
     } catch (e) {
       setState(() {
         _errorLoadingThreads = true;
-        _errorMessage = 'Error fetching Replies: $e';
+        _errorMessage = e.toString();
       });
     } finally {
       setState(() {
@@ -125,26 +128,16 @@ class _ThreadViewState extends State<ThreadView> {
               );
             }
             return Text(
-                "NO.${widget.threadID} ${forumProvider.findForumNameByFId(widget.forumID)}");
+                "NO.${widget.threadID} ${forumProvider.findForumNameByFId(widget.forumID, context)}");
           },
         ),
       ),
       body: _errorLoadingThreads
           ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error, color: Colors.red, size: 50),
-                  Text(
-                    _errorMessage ?? 'An error occurred.',
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _retryGetReplies,
-                    child: const Text('重试'),
-                  ),
-                ],
+              child: ErrorWithRetryWidget(
+                error:
+                    _errorMessage ?? AppLocalizations.of(context)!.unknownError,
+                retry: _retryGetReplies,
               ),
             )
           : RefreshIndicator(

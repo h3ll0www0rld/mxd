@@ -100,6 +100,11 @@ class NmbxdClient {
       method: 'GET',
       context: context,
     );
+    final responseData = json.decode(response.body);
+
+    if (responseData is Map && responseData['success'] == false) {
+      throw Exception(responseData['error']);
+    }
     return json.decode(response.body);
   }
 
@@ -130,7 +135,7 @@ class NmbxdClient {
     if (responseData is String && responseData == '该串不存在') {
       throw Exception('该串不存在');
     }
-    if (responseData['success'] == false) {
+    if (responseData is Map && responseData['success'] == false) {
       throw Exception(responseData['error']);
     }
     return responseData;

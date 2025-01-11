@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mxd/src/views/settings/appearance/view.dart';
 import 'package:mxd/src/views/settings/cookie/view.dart';
 import 'package:mxd/src/views/image/view.dart';
-import 'package:mxd/src/provider/forum_list.dart';
+import 'package:mxd/src/provider/forum.dart';
 import 'package:mxd/src/views/settings/performance/view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
