@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:mxd/src/core/widgets/error_with_retry.dart';
+import 'package:mxd/src/core/widgets/error.dart';
 import 'package:mxd/src/provider/forum.dart';
 import 'package:mxd/src/views/thread/service.dart';
 import 'package:mxd/src/views/thread/widgets/reply_card.dart';
@@ -132,17 +132,21 @@ class _ThreadViewState extends State<ThreadView> {
           },
         ),
       ),
-      body: _errorLoadingThreads
-          ? Center(
-              child: ErrorWithRetryWidget(
-                error:
-                    _errorMessage ?? AppLocalizations.of(context)!.unknownError,
-                retry: _retryGetReplies,
-              ),
-            )
-          : RefreshIndicator(
-              onRefresh: _refreshReplies,
-              child: ListView.builder(
+      body: RefreshIndicator(
+        onRefresh: _refreshReplies,
+        child: _errorLoadingThreads
+            ? ListView(
+                children: [
+                  Center(
+                    child: ErrorInfoWithRetryWidget(
+                      error: _errorMessage ??
+                          AppLocalizations.of(context)!.unknownError,
+                      retry: _retryGetReplies,
+                    ),
+                  ),
+                ],
+              )
+            : ListView.builder(
                 controller: _scrollController,
                 itemCount: _replies.length +
                     (_mainReply != null ? 1 : 0) +
@@ -182,7 +186,7 @@ class _ThreadViewState extends State<ThreadView> {
                   return const SizedBox();
                 },
               ),
-            ),
+      ),
     );
   }
 

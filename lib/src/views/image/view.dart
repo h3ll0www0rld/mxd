@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mxd/src/core/widgets/error.dart';
 
 class ImageView extends StatelessWidget {
   final String imageName;
@@ -26,8 +27,8 @@ class ImageView extends StatelessWidget {
               fit: BoxFit.contain,
               errorBuilder:
                   (BuildContext context, Object error, StackTrace? stackTrace) {
-                return ErrorWidget(
-                    AppLocalizations.of(context)!.imageLoadError);
+                return ErrorInfoWidget(
+                    error: AppLocalizations.of(context)!.imageLoadError);
               },
             ),
           ),

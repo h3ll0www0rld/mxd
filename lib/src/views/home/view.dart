@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mxd/src/core/widgets/error_with_retry.dart';
+import 'package:mxd/src/core/widgets/error.dart';
 import 'package:mxd/src/provider/forum.dart';
 import 'package:mxd/src/views/home/service.dart';
 import 'package:mxd/src/views/home/widgets/thread_card.dart';
@@ -183,7 +183,7 @@ class HomeViewState extends State<HomeView> {
                                         _refreshThreads(_selectedForumID),
                                     child: _errorMessage != null
                                         ? Center(
-                                            child: ErrorWithRetryWidget(
+                                            child: ErrorInfoWithRetryWidget(
                                                 error: _errorMessage ??
                                                     AppLocalizations.of(
                                                             context)!
@@ -277,7 +277,7 @@ class HomeViewState extends State<HomeView> {
                         onRefresh: () => _refreshThreads(_selectedForumID),
                         child: _errorMessage != null
                             ? Center(
-                                child: ErrorWithRetryWidget(
+                                child: ErrorInfoWithRetryWidget(
                                     error: _errorMessage ??
                                         AppLocalizations.of(context)!
                                             .unknownError,

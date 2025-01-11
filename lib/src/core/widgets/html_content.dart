@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:mxd/main.dart';
+import 'package:mxd/src/core/widgets/error.dart';
 import 'package:mxd/src/models/ref_dialog.dart';
 import 'package:mxd/src/views/thread/widgets/ref_dialog.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HtmlContentWidget extends StatelessWidget {
   final String content;
@@ -27,7 +28,7 @@ class HtmlContentWidget extends StatelessWidget {
               child: Text(
                 ">>No.$refId",
                 style: TextStyle(
-                    color: Color(0xFF789922),
+                    color: Theme.of(context).colorScheme.secondary,
                     fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
               ),
             );
@@ -60,12 +61,14 @@ class HtmlContentWidget extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(child: Text(snapshot.error.toString()));
             } else if (snapshot.hasData) {
               final refModel = RefModel.fromJson(snapshot.data!);
               return RefDialog(refModel: refModel);
             } else {
-              return Center(child: Text('Unexpected error occurred.'));
+              return Center(
+                  child: ErrorInfoWidget(
+                      error: AppLocalizations.of(context)!.unknownError));
             }
           },
         );
